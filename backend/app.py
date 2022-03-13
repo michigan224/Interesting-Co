@@ -2,8 +2,10 @@
 
 # Required imports
 import os
-from flask import Flask, request, jsonify
+
 from firebase_admin import credentials, firestore, initialize_app
+from flask import Flask, jsonify, request
+from geopy import distance
 
 # Initialize Flask app
 app = Flask(__name__)
@@ -28,10 +30,14 @@ def nearby_pins():
         users = get_users()
         user = next(
             (item for item in users if item['username'] == username), None)
-        print(user)
         visible_pins = [
-            pin for pin in pins if pin['owner_id'] in user['friends']]
-        return jsonify(visible_pins), 200
+            pin for pin in pins if (pin['is_public'] or pin['owner_id'] in user['friends'])]
+        for pin in visible_pins:
+            print(distance.distance(
+                tuple(pin['location']), tuple(current_location)).miles)
+        nearby_pins = [pin for pin in visible_pins if distance.distance(
+            tuple(pin['location']), tuple(current_location)).miles < PIN_RADIUS]
+        return jsonify(visible_pins, nearby_pins), 200
     except Exception as e:
         return f"An Error Occured: {e}"
 
@@ -61,7 +67,7 @@ def get_users():
     return users
 
 
-@app.route('/add', methods=['POST'])
+@ app.route('/add', methods=['POST'])
 def create():
     """
         create() : Add document to Firestore collection with request body.
@@ -76,7 +82,7 @@ def create():
         return f"An Error Occured: {e}"
 
 
-@app.route('/update', methods=['POST', 'PUT'])
+@ app.route('/update', methods=['POST', 'PUT'])
 def update():
     """
         update() : Update document in Firestore collection with request body.
@@ -91,7 +97,7 @@ def update():
         return f"An Error Occured: {e}"
 
 
-@app.route('/delete', methods=['GET', 'DELETE'])
+@ app.route('/delete', methods=['GET', 'DELETE'])
 def delete():
     """
         delete() : Delete a document from Firestore collection.
