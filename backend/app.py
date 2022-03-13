@@ -24,7 +24,14 @@ def nearby_pins():
     try:
         username = request.json['username']
         current_location = request.json['current_location']
-        pins = [pin.to_dict() for pin in todo_ref.stream()]
+        pins = []
+        for doc in pins_ref.stream():
+            pin = doc.to_dict()
+            for collection_ref in doc.reference.collections():
+                comments = [comment.to_dict()
+                            for comment in collection_ref.stream()]
+            pin['comments'] = comments
+            pins.append(pin)
         return jsonify(pins), 200
     except Exception as e:
         return f"An Error Occured: {e}"
