@@ -13,6 +13,21 @@ cred = credentials.Certificate('key.json')
 default_app = initialize_app(cred)
 db = firestore.client()
 todo_ref = db.collection('todos')
+pins_ref = db.collection('pins')
+
+
+# GET /nearby_pins
+@app.route('/nearby_pins', methods=['GET'])
+def nearby_pins():
+    """Returns a list of nearby pins"""
+    PIN_RADIUS = 15  # miles
+    try:
+        username = request.json['username']
+        current_location = request.json['current_location']
+        pins = [pin.to_dict() for pin in todo_ref.stream()]
+        return jsonify(pins), 200
+    except Exception as e:
+        return f"An Error Occured: {e}"
 
 
 @app.route('/add', methods=['POST'])
