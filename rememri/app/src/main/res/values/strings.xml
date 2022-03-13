@@ -1,4 +1,10 @@
 <resources>
     <string name="app_name">Rememri</string>
     <string name="ar_button_name">AR</string>
+    <string name="friend_title">Friends</string>
+    <string name="list_fragment">View</string>
+    <string name="add_fragment">Add</string>
+    <string name="requests_fragment">Requests</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
