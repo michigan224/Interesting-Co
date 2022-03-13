@@ -14,6 +14,7 @@ default_app = initialize_app(cred)
 db = firestore.client()
 todo_ref = db.collection('todos')
 pins_ref = db.collection('pins')
+users_ref = db.collection('users')
 
 
 # GET /nearby_pins
@@ -24,17 +25,41 @@ def nearby_pins():
     try:
         username = request.json['username']
         current_location = request.json['current_location']
-        pins = []
-        for doc in pins_ref.stream():
-            pin = doc.to_dict()
-            for collection_ref in doc.reference.collections():
-                comments = [comment.to_dict()
-                            for comment in collection_ref.stream()]
-            pin['comments'] = comments
-            pins.append(pin)
-        return jsonify(pins), 200
+        pins = get_pins()
+        users = get_users()
+        user = next(
+            (item for item in users if item['username'] == username), None)
+        print(user)
+        visible_pins = [
+            pin for pin in pins if pin['owner_id'] in user['friends']]
+        return jsonify(visible_pins), 200
     except Exception as e:
         return f"An Error Occured: {e}"
+
+
+def get_pins():
+    pins = []
+    for doc in pins_ref.stream():
+        pin = doc.to_dict()
+        for collection_ref in doc.reference.collections():
+            vals = [vals.to_dict()
+                    for vals in collection_ref.stream()]
+            pin[collection_ref.id] = vals
+        pins.append(pin)
+    return pins
+
+
+def get_users():
+    users = []
+    for doc in users_ref.stream():
+        user = doc.to_dict()
+        for collection_ref in doc.reference.collections():
+            print(collection_ref.id)
+            vals = [val.to_dict()['username']
+                    for val in collection_ref.stream()]
+            user[collection_ref.id] = vals
+        users.append(user)
+    return users
 
 
 @app.route('/add', methods=['POST'])
