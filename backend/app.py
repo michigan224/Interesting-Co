@@ -37,7 +37,7 @@ def nearby_pins():
                 tuple(pin['location']), tuple(current_location)).miles)
         nearby_pins = [pin for pin in visible_pins if distance.distance(
             tuple(pin['location']), tuple(current_location)).miles < PIN_RADIUS]
-        return jsonify(visible_pins, nearby_pins), 200
+        return jsonify(nearby_pins), 200
     except Exception as e:
         return f"An Error Occured: {e}"
 
