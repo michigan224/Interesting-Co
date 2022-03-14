@@ -41,6 +41,26 @@ def nearby_pins():
     except Exception as e:
         return f"An Error Occured: {e}"
 
+@app.route('/pin/<pin_id>', methods=['POST'])
+def specific_pin(pin_id):
+    """Returns a specific pin if it is accessible by the user"""
+    try:
+        username = request.json['username']
+        pins = get_pins()
+        users = get_users()
+        user = next(
+            (item for item in users if item['username'] == username), None)
+        visible_pins = [
+            pin for pin in pins if (pin['is_public'] or pin['owner_id'] in user['friends'])]
+        ret_pin = None
+        for pin in visible_pins:
+            if pin['pin_id'] == pin_id:
+                ret_pin = pin
+        if not ret_pin:
+            return jsonify({"error": "Pin not found, or not accessible by user"}), 404
+        return jsonify(ret_pin), 200
+    except Exception as e:
+        return f"An Error Occured: {e}"
 
 def get_pins():
     pins = []
@@ -65,6 +85,8 @@ def get_users():
             user[collection_ref.id] = vals
         users.append(user)
     return users
+
+
 
 
 @ app.route('/add', methods=['POST'])
