@@ -1,7 +1,9 @@
 package edu.umich.interestingco.rememri
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.tabs.TabLayout
 
@@ -9,6 +11,7 @@ class FriendActivity : AppCompatActivity() {
 
     var tabLayout: TabLayout? = null
     var viewPager: ViewPager? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_friend)
@@ -39,5 +42,9 @@ class FriendActivity : AppCompatActivity() {
         })
 
     }
+
+    fun returnMain(view: View?) = startActivity(Intent(this, MainActivity::class.java))
+
+    fun returnAccount(view: View?) = startActivity(Intent(this, AccountActivity::class.java))
 }
 
