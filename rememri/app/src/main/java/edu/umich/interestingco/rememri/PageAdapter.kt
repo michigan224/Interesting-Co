@@ -13,14 +13,21 @@ class PageAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
     var mFragmentTitleList = ArrayList<String>()
 
     override fun getPageTitle(position: Int): CharSequence {
-        return "OBJECT ${(position + 1)}"
+        return mFragmentTitleList.get(position)
     }
 
     // this is for fragment tabs
     override fun getItem(position: Int): Fragment {
-        return mFragmentList[position]
+        return mFragmentList.get(position)
     }
 
     // this counts total number of tabs
-    override fun getCount(): Int = 3
+    override fun getCount(): Int {
+        return mFragmentList.size
+    }
+
+    fun addFragment(fragment: Fragment, title: String) {
+        mFragmentList.add(fragment)
+        mFragmentTitleList.add(title)
+    }
 }

@@ -9,8 +9,9 @@ import com.google.android.material.tabs.TabLayout
 
 class FriendActivity : AppCompatActivity() {
 
-    var tabLayout: TabLayout? = null
-    var viewPager: ViewPager? = null
+    private var tabLayout: TabLayout? = null
+    private var viewPager: ViewPager? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -18,28 +19,32 @@ class FriendActivity : AppCompatActivity() {
 
         tabLayout = findViewById<TabLayout>(R.id.tabLayout)
         viewPager = findViewById<ViewPager>(R.id.viewPager)
+        tabLayout?.let { it.setupWithViewPager(viewPager) }
 
-        tabLayout!!.addTab(tabLayout!!.newTab().setText("View"))
-        tabLayout!!.addTab(tabLayout!!.newTab().setText("Add"))
-        tabLayout!!.addTab(tabLayout!!.newTab().setText("Requests"))
-        tabLayout!!.tabGravity = TabLayout.GRAVITY_FILL
+        //tabLayout!!.addTab(tabLayout!!.newTab().setText("View"))
+        //tabLayout!!.addTab(tabLayout!!.newTab().setText("Add"))
+        //tabLayout!!.addTab(tabLayout!!.newTab().setText("Requests"))
+        //tabLayout!!.tabGravity = TabLayout.GRAVITY_FILL
 
-        val adapter = PageAdapter(supportFragmentManager)
-        viewPager!!.adapter = adapter
+        val myAdapter = PageAdapter(supportFragmentManager)
+        myAdapter.addFragment(FriendListFragment(), "View")
+        myAdapter.addFragment(FriendAddFragment(), "Add")
+        myAdapter.addFragment(FriendRequestFragment(), "Requests")
+        viewPager!!.adapter = myAdapter
 
-        viewPager!!.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabLayout))
+        //viewPager!!.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabLayout))
 
-        tabLayout!!.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-            override fun onTabSelected(tab: TabLayout.Tab) {
-                viewPager!!.currentItem = tab.position
-            }
-            override fun onTabUnselected(tab: TabLayout.Tab) {
+        //tabLayout!!.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            //override fun onTabSelected(tab: TabLayout.Tab) {
+                //viewPager!!.currentItem = tab.position
+            //}
+            //override fun onTabUnselected(tab: TabLayout.Tab) {
 
-            }
-            override fun onTabReselected(tab: TabLayout.Tab) {
+            //}
+            //override fun onTabReselected(tab: TabLayout.Tab) {
 
-            }
-        })
+            //}
+        //})
 
     }
 
