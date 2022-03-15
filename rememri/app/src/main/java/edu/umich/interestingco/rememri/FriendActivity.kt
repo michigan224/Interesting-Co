@@ -19,7 +19,7 @@ class FriendActivity : AppCompatActivity() {
 
         tabLayout = findViewById<TabLayout>(R.id.tabLayout)
         viewPager = findViewById<ViewPager>(R.id.viewPager)
-        tabLayout?.let { it.setupWithViewPager(viewPager) }
+        tabLayout?.setupWithViewPager(viewPager)
 
         //tabLayout!!.addTab(tabLayout!!.newTab().setText("View"))
         //tabLayout!!.addTab(tabLayout!!.newTab().setText("Add"))
