@@ -13,21 +13,15 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.lifecycle.ViewModel
-import edu.umich.interestingco.rememri.databinding.ActivityPostBinding
-
-import android.app.usage.UsageEvents.Event.NONE
+import edu.umich.interestingco.rememri.databinding.ActivityMainBinding
 import android.content.ComponentName
 import android.content.ContentValues
-import android.icu.text.Collator.ReorderCodes.FIRST
 import android.os.Environment
 import android.provider.MediaStore
-import android.view.Menu
-import android.view.MenuItem
 import android.widget.ImageButton
-import androidx.activity.viewModels
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var view: ActivityPostBinding
+    private lateinit var view: ActivityMainBinding
     private var enableSend = true
     private val viewState: ImageViewState by viewModels()
     private lateinit var forCropResult: ActivityResultLauncher<Intent>
@@ -36,7 +30,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        view = ActivityPostBinding.inflate(layoutInflater)
+        view = ActivityMainBinding.inflate(layoutInflater)
         setContentView(R.layout.activity_main)
 
         // Get the permissions set up
