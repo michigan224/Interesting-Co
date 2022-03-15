@@ -5,6 +5,9 @@
     <string name="list_fragment">View</string>
     <string name="add_fragment">Add</string>
     <string name="requests_fragment">Requests</string>
+    <string name="camera">Camera</string>
+    <string name="preview">Image</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
