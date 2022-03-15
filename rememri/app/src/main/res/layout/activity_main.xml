@@ -55,6 +55,7 @@
         android:background="@color/rememri_green"
         android:minWidth="48dp"
         android:minHeight="40dp"
+        android:onClick="returnFriends"
         android:scaleX="1.75"
         android:scaleY="1.75"
         android:src="@drawable/friends_icon"
