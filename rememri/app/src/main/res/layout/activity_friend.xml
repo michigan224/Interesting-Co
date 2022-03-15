@@ -76,7 +76,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:tabTextColor="@color/rememri_black"
-            android:text="@string/list_fragment"/>
+            android:text="@string/list_fragment"
+            android:background="@color/rememri_white"/>
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
@@ -89,13 +90,14 @@
             android:layout_height="wrap_content"
             app:tabTextColor="@color/rememri_black"
             android:text="@string/requests_fragment"/>
-    </com.google.android.material.tabs.TabLayout>
+        </com.google.android.material.tabs.TabLayout>
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_constraintTop_toBottomOf="@+id/tabLayout"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        app:layout_constraintTop_toBottomOf="@+id/topToolbar"
         app:layout_constraintBottom_toTopOf="@+id/bottomToolbar">
 
     </androidx.viewpager.widget.ViewPager>
