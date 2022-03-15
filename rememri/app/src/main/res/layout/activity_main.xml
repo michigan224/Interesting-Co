@@ -77,7 +77,6 @@
 
     <ImageButton
         android:id="@+id/cameraButton"
-        android:contentDescription="@string/camera"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:backgroundTint="@color/rememri_dark_gray"
