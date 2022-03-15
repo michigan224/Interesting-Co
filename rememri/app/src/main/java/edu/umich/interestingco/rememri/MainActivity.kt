@@ -22,7 +22,6 @@ import android.widget.ImageButton
 
 class MainActivity : AppCompatActivity() {
     private lateinit var view: ActivityMainBinding
-    private var enableSend = true
     private val viewState: ImageViewState by viewModels()
     private lateinit var forCropResult: ActivityResultLauncher<Intent>
     private lateinit var forCameraButton: ActivityResultLauncher<Uri>
@@ -77,7 +76,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }
 
-        // TODO : This is some real sketchy shit that probabbly wont work.... <3 oh well
+        // TODO : This might be wrong, it works rn but idk, it worries me
         findViewById<ImageButton>(R.id.cameraButton).setOnClickListener {
             viewState.imageUri = mediaStoreAlloc("image/jpeg")
             forCameraButton.launch(viewState.imageUri)
