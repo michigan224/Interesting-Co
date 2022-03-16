@@ -64,19 +64,20 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <RelativeLayout
-        xmlns:mapbox="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginTop="70dp"
+        android:layout_marginBottom="70dp"
+        app:layout_constraintBottom_toTopOf="@+id/bottomToolbar"
+        app:layout_constraintTop_toBottomOf="@+id/topToolbar">
 
         <com.mapbox.maps.MapView
-            xmlns:mapbox="http://schemas.android.com/apk/res-auto"
             android:id="@+id/mapView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            mapbox:mapbox_cameraTargetLat="59.31"
-            mapbox:mapbox_cameraTargetLng="18.06"
-            mapbox:mapbox_cameraZoom="9.0"
-            />
+            app:mapbox_cameraTargetLat="59.31"
+            app:mapbox_cameraTargetLng="18.06"
+            app:mapbox_cameraZoom="9.0" />
     </RelativeLayout>
 
     <androidx.appcompat.widget.Toolbar
