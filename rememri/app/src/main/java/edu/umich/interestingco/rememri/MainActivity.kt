@@ -20,6 +20,12 @@ import android.os.Environment
 import android.provider.MediaStore
 import android.widget.ImageButton
 
+// From Mapbox -->
+import com.mapbox.maps.MapView
+import com.mapbox.maps.Style
+
+var mapView: MapView? = null
+
 class MainActivity : AppCompatActivity() {
     private lateinit var view: ActivityMainBinding
     private val viewState: ImageViewState by viewModels()
@@ -43,6 +49,10 @@ class MainActivity : AppCompatActivity() {
         }.launch(arrayOf(
             Manifest.permission.CAMERA,
             Manifest.permission.READ_EXTERNAL_STORAGE))
+
+        // For Mapbox -->
+        mapView = findViewById(R.id.mapView)
+        mapView?.getMapboxMap()?.loadStyleUri(Style.MAPBOX_STREETS)
 
         val cropIntent = initCropIntent()
         forCropResult =
@@ -81,6 +91,30 @@ class MainActivity : AppCompatActivity() {
             viewState.imageUri = mediaStoreAlloc("image/jpeg")
             forCameraButton.launch(viewState.imageUri)
         }
+    }
+
+    // Needed for Mapbox
+    override fun onStart() {
+        super.onStart()
+        mapView?.onStart()
+    }
+
+    // Needed for Mapbox
+    override fun onStop() {
+        super.onStop()
+        mapView?.onStop()
+    }
+
+    // Needed for Mapbox
+    override fun onLowMemory() {
+        super.onLowMemory()
+        mapView?.onLowMemory()
+    }
+
+    // Needed for Mapbox
+    override fun onDestroy() {
+        super.onDestroy()
+        mapView?.onDestroy()
     }
 
     fun returnFriends(view: View?) = startActivity(Intent(this, FriendActivity::class.java))
