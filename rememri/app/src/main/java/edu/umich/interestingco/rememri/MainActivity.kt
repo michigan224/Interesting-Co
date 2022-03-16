@@ -19,10 +19,11 @@ import android.content.ContentValues
 import android.os.Environment
 import android.provider.MediaStore
 import android.widget.ImageButton
-
-// From Mapbox -->
 import com.mapbox.maps.MapView
 import com.mapbox.maps.Style
+
+// From Mapbox -->
+//import com.mapbox.maps.Style
 
 var mapView: MapView? = null
 
@@ -36,7 +37,19 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         view = ActivityMainBinding.inflate(layoutInflater)
+        mapView = findViewById(R.id.mapView)
+
         setContentView(R.layout.activity_main)
+
+        mapView?.getMapboxMap()?.loadStyleUri(Style.MAPBOX_STREETS)
+
+        // Initializing is asynchrounous- getMapAsync will return a map
+       // mapView?.get { map ->
+            // Set one of the many styles available
+            //map.setStyle(Style.OUTDOORS) { style ->
+             //   Style.MAPBOX_STREETS
+            //}
+        //}
 
         // Get the permissions set up
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { results ->
@@ -51,8 +64,8 @@ class MainActivity : AppCompatActivity() {
             Manifest.permission.READ_EXTERNAL_STORAGE))
 
         // For Mapbox -->
-        mapView = findViewById(R.id.mapView)
-        mapView?.getMapboxMap()?.loadStyleUri(Style.MAPBOX_STREETS)
+        //mapView = findViewById(R.id.mapView)
+        //mapView?.getMapboxMap()?.loadStyleUri(Style.MAPBOX_STREETS)
 
         val cropIntent = initCropIntent()
         forCropResult =
@@ -94,28 +107,28 @@ class MainActivity : AppCompatActivity() {
     }
 
     // Needed for Mapbox
-    override fun onStart() {
-        super.onStart()
-        mapView?.onStart()
-    }
-
-    // Needed for Mapbox
-    override fun onStop() {
-        super.onStop()
-        mapView?.onStop()
-    }
-
-    // Needed for Mapbox
-    override fun onLowMemory() {
-        super.onLowMemory()
-        mapView?.onLowMemory()
-    }
-
-    // Needed for Mapbox
-    override fun onDestroy() {
-        super.onDestroy()
-        mapView?.onDestroy()
-    }
+//    override fun onStart() {
+//        super.onStart()
+//        mapView?.onStart()
+//    }
+//
+//    // Needed for Mapbox
+//    override fun onStop() {
+//        super.onStop()
+//        mapView?.onStop()
+//    }
+//
+//    // Needed for Mapbox
+//    override fun onLowMemory() {
+//        super.onLowMemory()
+//        mapView?.onLowMemory()
+//    }
+//
+//    // Needed for Mapbox
+//    override fun onDestroy() {
+//        super.onDestroy()
+//        mapView?.onDestroy()
+//    }
 
     fun returnFriends(view: View?) = startActivity(Intent(this, FriendActivity::class.java))
 

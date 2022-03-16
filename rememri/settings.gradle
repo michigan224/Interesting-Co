@@ -8,8 +8,7 @@ pluginManagement {
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
-        google()
-        mavenCentral()
+
         // From Mapbox -->
         maven {
             url 'https://api.mapbox.com/downloads/v2/releases/maven'
@@ -25,6 +24,8 @@ dependencyResolutionManagement {
             }
         }
         // <---------------------- [end from mapbox]
+        google()
+        mavenCentral()
     }
 }
 rootProject.name = "Rememri"

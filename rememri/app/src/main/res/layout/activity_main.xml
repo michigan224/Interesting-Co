@@ -17,8 +17,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="map"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/rememriTitle"
@@ -64,17 +63,22 @@
         app:layout_constraintEnd_toEndOf="@+id/topToolbar"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.mapbox.maps.MapView
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+    <RelativeLayout
         xmlns:mapbox="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/mapView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        mapbox:mapbox_cameraTargetLat="40.7128"
-        mapbox:mapbox_cameraTargetLng="-74.0060"
-        mapbox:mapbox_cameraZoom="9.0"
-        />
+        android:layout_height="match_parent">
+
+        <com.mapbox.maps.MapView
+            xmlns:mapbox="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/mapView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            mapbox:mapbox_cameraTargetLat="59.31"
+            mapbox:mapbox_cameraTargetLng="18.06"
+            mapbox:mapbox_cameraZoom="9.0"
+            />
+    </RelativeLayout>
+
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/bottomToolbar"
         android:layout_width="match_parent"
