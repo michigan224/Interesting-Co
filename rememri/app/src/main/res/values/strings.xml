@@ -8,6 +8,8 @@
     <string name="camera">Camera</string>
     <string name="preview">Image</string>
 
+    <string name="mapbox_access_token">pk.eyJ1IjoiaW50ZXJlc3RpbmdjbyIsImEiOiJjbDBzdmRnb2cwMmpkM2JxcTZ6Z240aXZkIn0.8ybGcOiM-rQz6vjVpR16Uw</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
