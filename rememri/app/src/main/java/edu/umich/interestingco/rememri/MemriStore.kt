@@ -79,4 +79,23 @@ object MemriStore {
         }
         queue.add(getRequest)
     }
+
+    fun postComment(context: Context, comment: Comment) {
+        val jsonObj = mapOf(
+            "username" to comment.owner_id,
+            "comment_text" to comment.text,
+            "post_id" to comment.post_id,
+        )
+        val postRequest = JsonObjectRequest(
+            Request.Method.POST,
+            MemriStore.serverUrl +"comment/", JSONObject(jsonObj),
+            { Log.d("comment", "comment posted!") },
+            { error -> Log.e("comment", error.localizedMessage ?: "JsonObjectRequest error") }
+        )
+
+        if (!this::queue.isInitialized) {
+            MemriStore.queue = newRequestQueue(context)
+        }
+        MemriStore.queue.add(postRequest)
+    }
 }
