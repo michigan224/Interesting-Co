@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".FriendRequestFragment">
+    tools:context=".FriendRequestFragment"
+    android:background="@color/rememri_white">
 
     <!-- TODO: Update blank fragment layout -->
     <TextView
@@ -11,6 +12,8 @@
         android:layout_height="match_parent"
         android:text="@string/requests_fragment"
         android:gravity="center"
+        android:textColor="@color/rememri_black"
+        android:fontFamily="@font/righteous"
         />
 
 </FrameLayout>
