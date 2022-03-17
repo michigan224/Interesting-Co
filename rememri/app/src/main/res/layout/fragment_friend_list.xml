@@ -3,14 +3,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".FriendListFragment">
+    tools:context=".FriendListFragment"
+    android:background="@color/rememri_white">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/list_fragment"
-        android:gravity="center"
-        />
 
+
+    <ListView
+        android:id="@+id/friendList"
+        android:layout_width="0dp"
+        android:layout_height="0dp" />
 </FrameLayout>

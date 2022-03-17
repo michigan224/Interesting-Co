@@ -7,6 +7,14 @@
     android:layout_height="match_parent"
     tools:context="edu.umich.interestingco.rememri.FriendActivity">
 
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        app:layout_constraintBottom_toTopOf="@id/bottomToolbar"
+        app:layout_constraintTop_toBottomOf="@id/tabLayout"></androidx.viewpager.widget.ViewPager>
+
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/topToolbar"
         android:layout_width="match_parent"
@@ -91,16 +99,6 @@
             app:tabTextColor="@color/rememri_black"
             android:text="@string/requests_fragment"/>
         </com.google.android.material.tabs.TabLayout>
-
-    <androidx.viewpager.widget.ViewPager
-        android:id="@+id/viewPager"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        app:layout_constraintTop_toBottomOf="@+id/topToolbar"
-        app:layout_constraintBottom_toTopOf="@+id/bottomToolbar">
-
-    </androidx.viewpager.widget.ViewPager>
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/bottomToolbar"

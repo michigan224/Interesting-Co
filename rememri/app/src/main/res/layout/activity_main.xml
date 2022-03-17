@@ -63,6 +63,23 @@
         app:layout_constraintEnd_toEndOf="@+id/topToolbar"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="70dp"
+        android:layout_marginBottom="70dp"
+        app:layout_constraintBottom_toTopOf="@+id/bottomToolbar"
+        app:layout_constraintTop_toBottomOf="@+id/topToolbar">
+
+        <com.mapbox.maps.MapView
+            android:id="@+id/mapView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:mapbox_cameraTargetLat="59.31"
+            app:mapbox_cameraTargetLng="18.06"
+            app:mapbox_cameraZoom="9.0" />
+    </RelativeLayout>
+
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/bottomToolbar"
         android:layout_width="match_parent"
