@@ -1,11 +1,15 @@
 package edu.umich.interestingco.rememri
 
+import android.content.Context
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ListView
+import androidx.fragment.app.Fragment
 import edu.umich.interestingco.rememri.FriendStore.friends
+import edu.umich.interestingco.rememri.databinding.FragmentFriendListBinding
+
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -21,15 +25,19 @@ class FriendListFragment : Fragment() {
     // TODO: Rename and change types of parameters
 
     private lateinit var friendListAdapter: FriendListAdapter
+    private lateinit var view1: FragmentFriendListBinding
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-
-        friendListAdapter = FriendListAdapter(requireContext(), friends)
+        savedInstanceState: Bundle?): View {
+        val view: View = inflater.inflate(R.layout.fragment_friend_list, container, false)
+        val myList: ListView = view.findViewById(R.id.friendList)
+        friendListAdapter = FriendListAdapter(requireContext().applicationContext, friends)
+        myList.adapter = friendListAdapter
+        //view1.friendList.adapter = friendListAdapter
         
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_friend_list, container, false)
+        return view
     }
 }
