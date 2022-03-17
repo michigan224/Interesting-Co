@@ -32,8 +32,11 @@ import android.graphics.BitmapFactory;
 import edu.umich.interestingco.rememri.R;
 import android.view.ViewGroup;
 import java.util.ArrayList;
+import android.location.LocationManager;
+import android.location.LocationListener;
+import android.location.Location;
 
-public class ARView extends AppCompatActivity {
+public class ARView extends AppCompatActivity{
     private static final String TAG = ARView.class.getSimpleName();
     private static final double MIN_OPENGL_VERSION = 3.0;
 
