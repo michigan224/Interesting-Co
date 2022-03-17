@@ -33,6 +33,11 @@
             android:label="@string/friend_title"
             android:parentActivityName=".MainActivity" />
         <activity
+            android:name=".AccountActivity"
+            android:exported="false"
+            android:label="@string/account_title"
+            android:parentActivityName=".MainActivity" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
