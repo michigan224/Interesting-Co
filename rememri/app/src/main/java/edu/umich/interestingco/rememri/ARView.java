@@ -31,6 +31,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import edu.umich.interestingco.rememri.R;
 import android.view.ViewGroup;
+import java.util.ArrayList;
 
 public class ARView extends AppCompatActivity {
     private static final String TAG = ARView.class.getSimpleName();
@@ -42,6 +43,7 @@ public class ARView extends AppCompatActivity {
 
     private ViewRenderable imageRenderable;
     private boolean hasFinishedLoading = false;
+    ArrayList<AnchorNode> node_list = new ArrayList<AnchorNode>();
 
     @Override
     @SuppressWarnings({"AndroidApiChecker", "FutureReturnValueIgnored"})
@@ -94,38 +96,48 @@ public class ARView extends AppCompatActivity {
     }
 
     public void DisplayImage() {
-        ImageView i = new ImageView(this);
-        i.setImageResource(R.drawable.goat);
-        i.setAdjustViewBounds(true);
-        i.setLayoutParams(new ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT));
+        for (AnchorNode e : node_list){
+            arFragment.getArSceneView().getScene().removeChild(e);
+        }
 
-        CompletableFuture<ViewRenderable> imageStage =
-                ViewRenderable.builder().setView(this, i).build();
-        CompletableFuture.allOf(
-                imageStage)
-                .handle(
-                        (notUsed, throwable) -> {
+        int[] photos = {R.drawable.goat, R.drawable.duck};
+        float j = 0;
+        for (int element : photos) {
+            ImageView i = new ImageView(this);
+            i.setImageResource(element);
+            i.setAdjustViewBounds(true);
+            i.setLayoutParams(new ViewGroup.LayoutParams(
+                    100 * 3,
+                    200 * 3));
 
-                            if (throwable != null) {
+            CompletableFuture<ViewRenderable> imageStage =
+                    ViewRenderable.builder().setView(this, i).build();
+            float finalJ = j;
+            CompletableFuture.allOf(
+                    imageStage)
+                    .handle(
+                            (notUsed, throwable) -> {
+
+                                if (throwable != null) {
+                                    return null;
+                                }
+
+                                try {
+                                    Session session = arFragment.getArSceneView().getSession();
+                                    float[] pos = { finalJ * 0.5f - finalJ, 0, -1 };
+                                    float[] rotation = { 0, 0, 0, 1 };
+                                    Anchor anchor =  session.createAnchor(new Pose(pos, rotation));
+                                    AnchorNode anchorNode = new AnchorNode(anchor);
+                                    anchorNode.setRenderable(imageStage.get());
+                                    anchorNode.setParent(arFragment.getArSceneView().getScene());
+                                    node_list.add(anchorNode);
+                                } catch (InterruptedException | ExecutionException ex) {
+                                }
+
                                 return null;
-                            }
-
-                            try {
-                                Session session = arFragment.getArSceneView().getSession();
-                                float[] pos = { 0, 0, -1 };
-                                float[] rotation = { 0, 0, 0, 1 };
-                                Anchor anchor =  session.createAnchor(new Pose(pos, rotation));
-                                AnchorNode anchorNode = new AnchorNode(anchor);
-                                anchorNode.setRenderable(imageStage.get());
-                                anchorNode.setParent(arFragment.getArSceneView().getScene());
-
-                            } catch (InterruptedException | ExecutionException ex) {
-                            }
-
-                            return null;
-                        });
+                            });
+            j += 1;
+        }
     }
 
 
