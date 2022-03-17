@@ -5,5 +5,5 @@ class Memri(var pin_id: Int? = null,
             var is_public: Boolean? = null,
             var media_url: String? = null,
             var timestamp: String? = null,
-            var comments: CommentStore? = null,
+            var comments: ArrayList<Comment>? = null,
             var location: Array<Int>? = null)

@@ -37,18 +37,35 @@ object MemriStore {
         queue.add(postRequest)
     }
 
-    fun getMemris(context: Context, completion: () -> Unit) {
-        val getRequest = JsonObjectRequest(serverUrl+"nearby_pins/",
+    fun getMemris(context: Context, completion: () -> Unit, username: String, location: Array<Int>) {
+        val jsonObj = mapOf(
+            "username" to username,
+            "current_location" to location,
+        )
+        val getRequest = JsonObjectRequest(Request.Method.GET,serverUrl+"nearby_pins/", JSONObject(jsonObj),
             { response ->
                 memris.clear()
                 val memrisReceived = try { response.getJSONArray("pins") } catch (e: JSONException) { JSONArray() }
                 for (i in 0 until memrisReceived.length()) {
                     val memriEntry = memrisReceived[i] as JSONArray
+                    val commentList = memriEntry[0] as JSONArray
+                    val memriComments = arrayListOf<Comment>()
+                    for (i in 0 until commentList.length()) {
+                        val commentEntry = commentList[i] as JSONArray
+                        memriComments.add(
+                            Comment(
+                            owner_id = commentEntry[0].toString(),
+                            text = commentEntry[1].toString(),
+                            timestamp = commentEntry[2].toString()))
+                    }
                     if (memriEntry.length() == nFields) {
                         memris.add(Memri(
-                            owner_id = memriEntry[0].toString(),
-                            media_url = memriEntry[1].toString(),
-                            timestamp = memriEntry[2].toString()))
+                            is_public = memriEntry[1] as Boolean?,
+                            location = memriEntry[2] as Array<Int>?,
+                            media_url = memriEntry[3].toString(),
+                            owner_id = memriEntry[4].toString(),
+                            timestamp = memriEntry[2].toString(),
+                            comments = memriComments))
                     } else {
                         Log.e("getMemris", "Received unexpected number of fields: " + memriEntry.length().toString() + " instead of " + nFields.toString())
                     }
