@@ -152,6 +152,8 @@ def nearby_pins():
         users = get_users()
         user = next(
             (item for item in users if item['username'] == username), None)
+        if not user:
+            return jsonify({"message": "User not found"}), 401
         visible_pins = [
             pin for pin in pins if (pin['is_public'] or pin['owner_id'] in user['friends'])]
         for pin in visible_pins:
@@ -173,6 +175,8 @@ def specific_pin(pin_id):
         users = get_users()
         user = next(
             (item for item in users if item['username'] == username), None)
+        if not user:
+            return jsonify({"message": "User not found"}), 401
         visible_pins = [
             pin for pin in pins if (pin['is_public'] or pin['owner_id'] in user['friends'])]
         ret_pin = None
@@ -204,7 +208,6 @@ def post_pin():
             'post_id': post_id
         }
         new_pin = pins_ref.add(data)[1]
-        print(new_pin)
         new_pin.collection('comments').add({})
         return jsonify({"success": True}), 200
     except Exception as e:
