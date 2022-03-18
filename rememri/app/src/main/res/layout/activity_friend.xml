@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="edu.umich.interestingco.rememri.FriendActivity">
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        app:layout_constraintBottom_toTopOf="@id/bottomToolbar"
+        app:layout_constraintTop_toBottomOf="@id/tabLayout"></androidx.viewpager.widget.ViewPager>
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/topToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:background="@color/rememri_green"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/rememriTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="25dp"
+        android:fontFamily="@font/righteous"
+        android:text="@string/app_name"
+        android:textColor="@color/rememri_black"
+        android:textSize="36sp"
+        app:layout_constraintBottom_toBottomOf="@+id/topToolbar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/topToolbar" />
+
+    <ImageButton
+        android:id="@+id/accountButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        android:background="@color/rememri_green"
+        android:minWidth="48dp"
+        android:minHeight="40dp"
+        android:scaleX="1.75"
+        android:scaleY="1.75"
+        android:onClick="returnAccount"
+        app:layout_constraintBottom_toBottomOf="@+id/topToolbar"
+        app:layout_constraintEnd_toStartOf="@+id/friendsButton"
+        app:layout_constraintTop_toTopOf="@+id/topToolbar"
+        app:srcCompat="@drawable/account_icon_outlined" />
+
+    <ImageButton
+        android:id="@+id/friendsButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="25dp"
+        android:background="@color/rememri_green"
+        android:minWidth="48dp"
+        android:minHeight="40dp"
+        android:scaleX="1.75"
+        android:scaleY="1.75"
+        android:src="@drawable/friends_icon"
+        app:layout_constraintBottom_toBottomOf="@+id/topToolbar"
+        app:layout_constraintEnd_toEndOf="@+id/topToolbar"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/rememri_white"
+        app:tabTextColor="@color/rememri_black"
+        app:layout_constraintTop_toBottomOf="@id/topToolbar">
+
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:tabTextColor="@color/rememri_black"
+            android:text="@string/list_fragment"
+            android:background="@color/rememri_white"/>
+
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:tabTextColor="@color/rememri_black"
+            android:text="@string/add_fragment"/>
+
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:tabTextColor="@color/rememri_black"
+            android:text="@string/requests_fragment"/>
+        </com.google.android.material.tabs.TabLayout>
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/bottomToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:background="@color/rememri_dark_gray"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageButton
+        android:id="@+id/backButton"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="85dp"
+        android:onClick="returnMain"
+        app:layout_constraintEnd_toStartOf="@id/friendTitle"
+        app:layout_constraintTop_toTopOf="@id/bottomToolbar"
+        app:srcCompat="?attr/actionModeCloseDrawable" />
+
+    <TextView
+        android:id="@+id/friendTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="25dp"
+        android:fontFamily="@font/righteous"
+        android:text="@string/friend_title"
+        android:textColor="@color/rememri_white"
+        android:textSize="30sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="@+id/bottomToolbar"
+        app:layout_constraintTop_toTopOf="@+id/bottomToolbar"
+        app:layout_constraintVertical_bias="0.407" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

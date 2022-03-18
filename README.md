@@ -1,15 +1,7 @@
 # Interesting-Co
 
-Front-End:
-	- Claire Russell
-	- Mila Havens
+Front-End: - Claire Russell - Mila Havens
 
-Back-End:
-	- Ibrahim Kosgi
-	- David Sanabria
+Back-End: - Ibrahim Kosgi - David Sanabria
 
-AR:
-	- Colin Yoon 
-	- Hadianto Leonard
-
-
+AR: - Colin Yoon - Hadianto Leonard
