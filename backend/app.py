@@ -18,6 +18,7 @@ db = firestore.client()
 pins_ref = db.collection('pins')
 users_ref = db.collection('users')
 
+
 @app.route('/accounts/sign_up', methods=['POST'])
 def sign_up():
     try:
@@ -44,6 +45,39 @@ def sign_up():
     except Exception as e:
         return f"An Error Occured: {e}", 400
 
+
+@app.route('/accounts/sign_in', methods=['POST'])
+def sign_in():
+    try:
+        username = request.json['username']
+        password = request.json['password']
+
+        user = users_ref.where('username', '==', username).get()
+        if bool(user):
+            salt = user[0].to_dict()['password'].split('$')[1]
+            algorithm = 'sha512'
+            hash_obj = hashlib.new(algorithm)
+            password_salted = salt + password
+            hash_obj.update(password_salted.encode('utf-8'))
+            password_hash = hash_obj.hexdigest()
+            hashed_password = "$".join([algorithm, salt, password_hash])
+            if user[0].to_dict()['password'] == hashed_password:
+                return jsonify({
+                    'message': 'success'
+                }), 200
+            else:
+                return jsonify({
+                    'message': 'Incorrect Password.'
+                }), 401
+        else:
+            return jsonify({
+                'message': 'User not found.'
+            }), 401
+
+    except Exception as e:
+        return f"An Error Occured: {e}", 400
+
+
 @app.route('/friends', methods=['GET'])
 def get_friends():
     try:
@@ -53,7 +87,7 @@ def get_friends():
             if user['username'] == username:
                 friends = user['friends'] if 'friends' in user else []
                 return jsonify(friends), 200
-        
+
         return jsonify({
             'message': 'No user found.'
         }), 401
@@ -68,6 +102,7 @@ def get_friends():
     except Exception as e:
         return f"An Error Occured: {e}", 400
 
+
 @app.route('/friend_requests/incoming', methods=['GET'])
 def get_incoming_requests():
     try:
@@ -75,14 +110,16 @@ def get_incoming_requests():
         users = get_users()
         for user in users:
             if user['username'] == username:
-                incoming_requests = user['incoming_requests'] if 'incoming_requests' in user else []
+                incoming_requests = user['incoming_requests'] if 'incoming_requests' in user else [
+                ]
                 return jsonify(incoming_requests), 200
-        
+
         return jsonify({
             'message': 'No user found.'
         }), 401
     except Exception as e:
         return f"An Error Occured: {e}", 400
+
 
 @app.route('/friend_requests/outgoing', methods=['GET'])
 def get_outgoing_requests():
@@ -91,9 +128,10 @@ def get_outgoing_requests():
         users = get_users()
         for user in users:
             if user['username'] == username:
-                outgoing_requests = user['outgoing_requests'] if 'outgoing_requests' in user else []
+                outgoing_requests = user['outgoing_requests'] if 'outgoing_requests' in user else [
+                ]
                 return jsonify(outgoing_requests), 200
-        
+
         return jsonify({
             'message': 'No user found.'
         }), 401
@@ -101,6 +139,8 @@ def get_outgoing_requests():
         return f"An Error Occured: {e}", 400
 
 # GET /nearby_pins
+
+
 @app.route('/nearby_pins', methods=['GET'])
 def nearby_pins():
     """Returns a list of nearby pins"""
@@ -112,6 +152,8 @@ def nearby_pins():
         users = get_users()
         user = next(
             (item for item in users if item['username'] == username), None)
+        if not user:
+            return jsonify({"message": "User not found"}), 401
         visible_pins = [
             pin for pin in pins if (pin['is_public'] or pin['owner_id'] in user['friends'])]
         for pin in visible_pins:
@@ -133,6 +175,8 @@ def specific_pin(pin_id):
         users = get_users()
         user = next(
             (item for item in users if item['username'] == username), None)
+        if not user:
+            return jsonify({"message": "User not found"}), 401
         visible_pins = [
             pin for pin in pins if (pin['is_public'] or pin['owner_id'] in user['friends'])]
         ret_pin = None
@@ -164,11 +208,38 @@ def post_pin():
             'post_id': post_id
         }
         new_pin = pins_ref.add(data)[1]
-        print(new_pin)
         new_pin.collection('comments').add({})
         return jsonify({"success": True}), 200
     except Exception as e:
         return f"An Error Occured: {e}"
+
+
+def get_pins():
+    pins = []
+    for doc in pins_ref.stream():
+        pin = doc.to_dict()
+        for collection_ref in doc.reference.collections():
+            vals = [vals.to_dict()
+                    for vals in collection_ref.stream() if bool(vals.to_dict())]
+            if vals:
+                pin[collection_ref.id] = vals
+            else:
+                pin[collection_ref.id] = []
+        pins.append(pin)
+    return pins
+
+
+def get_users():
+    users = []
+    for doc in users_ref.stream():
+        user = doc.to_dict()
+        for collection_ref in doc.reference.collections():
+            print(collection_ref.id)
+            vals = [val.to_dict()['username']
+                    for val in collection_ref.stream()]
+            user[collection_ref.id] = vals
+        users.append(user)
+    return users
 
 # Old boilerplate code for reference
 
