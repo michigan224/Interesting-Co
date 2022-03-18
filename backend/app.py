@@ -1,14 +1,18 @@
+# app.py
+
+# Required imports
 import os
-
+from flask import Flask, request, jsonify
 from firebase_admin import credentials, firestore, initialize_app
-from flask import Flask, jsonify, request
-from geopy import distance
 
+# Initialize Flask app
 app = Flask(__name__)
 
+# Initialize Firestore DB
 cred = credentials.Certificate('key.json')
 default_app = initialize_app(cred)
 db = firestore.client()
+todo_ref = db.collection('todos')
 pins_ref = db.collection('pins')
 users_ref = db.collection('users')
 
@@ -86,58 +90,7 @@ def post_pin():
         return f"An Error Occured: {e}"
 
 
-@ app.route('/comment', methods=['POST'])
-def post_comment():
-    """Creates a new comment"""
-    try:
-        username = request.json['username']
-        text = request.json['comment_text']
-        post_id = request.json['post_id']
-        data = {
-            'owner_id': username,
-            'text': text,
-            'timestamp': firestore.SERVER_TIMESTAMP,
-        }
-        for doc in pins_ref.stream():
-            if 'post_id' in doc.to_dict() and doc.to_dict()['post_id'] == post_id:
-                for collection_ref in doc.reference.collections():
-                    print(collection_ref.id)
-                    if collection_ref.id == 'comments':
-                        collection_ref.add(data)
-        return jsonify({"success": True}), 200
-    except Exception as e:
-        return f"An Error Occured: {e}"
-
-
-def get_pins():
-    pins = []
-    for doc in pins_ref.stream():
-        pin = doc.to_dict()
-        for collection_ref in doc.reference.collections():
-            vals = [vals.to_dict()
-                    for vals in collection_ref.stream() if bool(vals.to_dict())]
-            if vals:
-                pin[collection_ref.id] = vals
-            else:
-                pin[collection_ref.id] = []
-        pins.append(pin)
-    return pins
-
-
-def get_users():
-    users = []
-    for doc in users_ref.stream():
-        user = doc.to_dict()
-        for collection_ref in doc.reference.collections():
-            print(collection_ref.id)
-            vals = [val.to_dict()['username']
-                    for val in collection_ref.stream()]
-            user[collection_ref.id] = vals
-        users.append(user)
-    return users
-
-
-@ app.route('/add', methods=['POST'])
+@app.route('/add', methods=['POST'])
 def create():
     """
         create() : Add document to Firestore collection with request body.
@@ -152,7 +105,27 @@ def create():
         return f"An Error Occured: {e}"
 
 
-@ app.route('/update', methods=['POST', 'PUT'])
+@app.route('/list', methods=['GET'])
+def read():
+    """
+        read() : Fetches documents from Firestore collection as JSON.
+        todo : Return document that matches query ID.
+        all_todos : Return all documents.
+    """
+    try:
+        # Check if ID was passed to URL query
+        todo_id = request.args.get('id')
+        if todo_id:
+            todo = todo_ref.document(todo_id).get()
+            return jsonify(todo.to_dict()), 200
+        else:
+            all_todos = [doc.to_dict() for doc in todo_ref.stream()]
+            return jsonify(all_todos), 200
+    except Exception as e:
+        return f"An Error Occured: {e}"
+
+
+@app.route('/update', methods=['POST', 'PUT'])
 def update():
     """
         update() : Update document in Firestore collection with request body.
@@ -167,7 +140,7 @@ def update():
         return f"An Error Occured: {e}"
 
 
-@ app.route('/delete', methods=['GET', 'DELETE'])
+@app.route('/delete', methods=['GET', 'DELETE'])
 def delete():
     """
         delete() : Delete a document from Firestore collection.
