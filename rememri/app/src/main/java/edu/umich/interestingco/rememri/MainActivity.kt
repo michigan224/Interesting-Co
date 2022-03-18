@@ -134,6 +134,8 @@ class MainActivity : AppCompatActivity() {
 
     fun returnAccount(view: View?) = startActivity(Intent(this, AccountActivity::class.java))
 
+    fun returnAR(view: View?) = startActivity(Intent(this, ARView::class.java))
+
     private fun initCropIntent(): Intent? {
         // Is there any published Activity on device to do image cropping?
         val intent = Intent("com.android.camera.action.CROP")
