@@ -81,7 +81,7 @@ def sign_in():
 @app.route('/friends', methods=['GET'])
 def get_friends():
     try:
-        username = request.json['username']
+        username = request.args.get('username')
         users = get_users()
         for user in users:
             if user['username'] == username:
@@ -106,7 +106,7 @@ def get_friends():
 @app.route('/friend_requests/incoming', methods=['GET'])
 def get_incoming_requests():
     try:
-        username = request.json['username']
+        username = request.args.get('username')
         users = get_users()
         for user in users:
             if user['username'] == username:
@@ -124,7 +124,7 @@ def get_incoming_requests():
 @app.route('/friend_requests/outgoing', methods=['GET'])
 def get_outgoing_requests():
     try:
-        username = request.json['username']
+        username = request.args.get('username')
         users = get_users()
         for user in users:
             if user['username'] == username:
@@ -146,8 +146,8 @@ def nearby_pins():
     """Returns a list of nearby pins"""
     PIN_RADIUS = 15  # miles
     try:
-        username = request.json['username']
-        current_location = request.json['current_location']
+        username = request.args.get('username')
+        current_location = request.args.get('current_location').split(',')
         pins = get_pins()
         users = get_users()
         user = next(
@@ -170,7 +170,7 @@ def nearby_pins():
 def specific_pin(pin_id):
     """Returns a specific pin if it is accessible by the user"""
     try:
-        username = request.json['username']
+        username = request.args.get('username')
         pins = get_pins()
         users = get_users()
         user = next(
