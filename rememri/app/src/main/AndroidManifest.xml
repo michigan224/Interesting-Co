@@ -50,16 +50,21 @@
             android:label="@string/account_title"
             android:parentActivityName=".MainActivity" />
         <activity
-            android:name=".MainActivity"
-            android:exported="true">
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.MAIN" />-->
-
-<!--                <category android:name="android.intent.category.LAUNCHER" />-->
-<!--            </intent-filter>-->
-        </activity>
+            android:name=".SignupActivity"
+            android:exported="false"
+            android:label="@string/signup"
+            android:parentActivityName=".AccountActivity" />
+        <activity
+            android:name=".LoginActivity"
+            android:exported="false"
+            android:label="@string/login"
+            android:parentActivityName=".AccountActivity" />
         <activity
             android:name=".ARView"
+            android:exported="true"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

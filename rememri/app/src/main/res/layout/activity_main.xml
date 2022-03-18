@@ -119,6 +119,7 @@
         android:background="@drawable/round_button"
         android:backgroundTint="@color/rememri_light_gray"
         android:fontFamily="@font/roboto_slab"
+        android:onClick="returnAR"
         android:text="@string/ar_button_name"
         android:textColor="@color/rememri_black"
         android:textStyle="bold"
