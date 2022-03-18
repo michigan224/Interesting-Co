@@ -119,7 +119,7 @@
         android:layout_marginTop="40dp"
         android:backgroundTint="@color/rememri_green"
         android:fontFamily="@font/roboto_slab"
-        android:onClick="returnAccount"
+        android:onClick="returnMain"
         android:text="@string/submit"
         android:textColor="@color/rememri_black"
         app:layout_constraintEnd_toEndOf="parent"
