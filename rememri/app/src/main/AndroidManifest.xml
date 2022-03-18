@@ -37,6 +37,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Rememri">
 
+        <meta-data android:name="com.google.ar.core" android:value="required" />
+
         <activity
             android:name=".FriendActivity"
             android:exported="false"
@@ -57,6 +59,10 @@
             android:exported="false"
             android:label="@string/login"
             android:parentActivityName=".AccountActivity" />
+        <activity
+            android:name=".ARView"
+            android:exported="true"
+            android:parentActivityName=".MainActivity" />
         <activity
             android:name=".MainActivity"
             android:exported="true">
