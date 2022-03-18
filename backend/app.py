@@ -36,6 +36,8 @@ def nearby_pins():
     except Exception as e:
         return f"An Error Occured: {e}"
 
+# GET /pin/<pin_id>
+
 
 @app.route('/pin/<pin_id>', methods=['GET'])
 def specific_pin(pin_id):
