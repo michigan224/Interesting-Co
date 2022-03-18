@@ -52,18 +52,19 @@ def sign_in():
         username = request.json['username']
         password = request.json['password']
 
-        algorithm = 'sha512'
-        salt = uuid.uuid4().hex
-        hash_obj = hashlib.new(algorithm)
-        password_salted = salt + password
-        hash_obj.update(password_salted.encode('utf-8'))
-        password_hash = hash_obj.hexdigest()
-        hashed_password = "$".join([algorithm, salt, password_hash])
-
         user = users_ref.where('username', '==', username).get()
         if bool(user):
+            salt = user[0].to_dict()['password'].split('$')[1]
+            algorithm = 'sha512'
+            hash_obj = hashlib.new(algorithm)
+            password_salted = salt + password
+            hash_obj.update(password_salted.encode('utf-8'))
+            password_hash = hash_obj.hexdigest()
+            hashed_password = "$".join([algorithm, salt, password_hash])
             if user[0].to_dict()['password'] == hashed_password:
-                return 200
+                return jsonify({
+                    'message': 'success'
+                }), 200
             else:
                 return jsonify({
                     'message': 'Incorrect Password.'
