@@ -15,5 +15,9 @@ class AccountActivity : AppCompatActivity() {
     fun returnMain(view: View?) = startActivity(Intent(this, MainActivity::class.java))
 
     fun returnFriends(view: View?) = startActivity(Intent(this, FriendActivity::class.java))
+
+    fun returnSignup(view: View?) = startActivity(Intent(this, SignupActivity::class.java))
+
+    fun returnLogin(view: View?) = startActivity(Intent(this, LoginActivity::class.java))
 }
 
