@@ -39,6 +39,7 @@
         android:background="@color/rememri_green"
         android:minWidth="48dp"
         android:minHeight="40dp"
+        android:onClick="returnAccount"
         android:scaleX="1.75"
         android:scaleY="1.75"
         app:layout_constraintBottom_toBottomOf="@+id/topToolbar"
@@ -118,7 +119,7 @@
         android:layout_marginTop="40dp"
         android:backgroundTint="@color/rememri_green"
         android:fontFamily="@font/roboto_slab"
-        android:onClick="returnAccount"
+        android:onClick="returnMain"
         android:text="@string/submit"
         android:textColor="@color/rememri_black"
         app:layout_constraintEnd_toEndOf="parent"
@@ -129,7 +130,7 @@
     <EditText
         android:id="@+id/editTextTextPassword"
         android:layout_width="160dp"
-        android:layout_height="33dp"
+        android:layout_height="42dp"
         android:layout_marginStart="4dp"
         android:layout_marginTop="20dp"
         android:ems="10"
@@ -142,11 +143,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="84dp"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="30dp"
         android:fontFamily="@font/roboto_slab"
         android:text="@string/password"
         android:textColor="@color/rememri_black"
-        android:textSize="18dp"
+        android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/usernameLabel" />
 
@@ -159,7 +160,7 @@
         android:fontFamily="@font/roboto_slab"
         android:text="@string/username"
         android:textColor="@color/rememri_black"
-        android:textSize="18dp"
+        android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/loginPrompt" />
 
