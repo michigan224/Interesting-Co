@@ -3,6 +3,8 @@ import os
 from firebase_admin import credentials, firestore, initialize_app
 from flask import Flask, jsonify, request
 from geopy import distance
+import hashlib
+import uuid
 
 app = Flask(__name__)
 
@@ -12,6 +14,87 @@ db = firestore.client()
 pins_ref = db.collection('pins')
 users_ref = db.collection('users')
 
+@app.route('/accounts/sign_up', methods=['POST'])
+def sign_up():
+    try:
+        username = request.json['username']
+        password = request.json['password']
+
+        algorithm = 'sha512'
+        salt = uuid.uuid4().hex
+        hash_obj = hashlib.new(algorithm)
+        password_salted = salt + password
+        hash_obj.update(password_salted.encode('utf-8'))
+        password_hash = hash_obj.hexdigest()
+        hashed_password = "$".join([algorithm, salt, password_hash])
+
+        data = {
+            "username": username,
+            "password": hashed_password
+        }
+
+        users_ref.add(data)[1]
+
+        return "", 201
+
+    except Exception as e:
+        return f"An Error Occured: {e}", 400
+
+@app.route('/friends', methods=['GET'])
+def get_friends():
+    try:
+        username = request.json['username']
+        users = get_users()
+        for user in users:
+            if user['username'] == username:
+                friends = user['friends'] if 'friends' in user else []
+                return jsonify(friends), 200
+        
+        return jsonify({
+            'message': 'No user found.'
+        }), 401
+        # # Check if ID was passed to URL query
+        # todo_id = request.args.get('id')
+        # if todo_id:
+        #     todo = todo_ref.document(todo_id).get()
+        #     return jsonify(todo.to_dict()), 200
+        # else:
+        #     all_todos = [doc.to_dict() for doc in todo_ref.stream()]
+        #     return jsonify(all_todos), 200
+    except Exception as e:
+        return f"An Error Occured: {e}", 400
+
+@app.route('/friend_requests/incoming', methods=['GET'])
+def get_incoming_requests():
+    try:
+        username = request.json['username']
+        users = get_users()
+        for user in users:
+            if user['username'] == username:
+                incoming_requests = user['incoming_requests'] if 'incoming_requests' in user else []
+                return jsonify(incoming_requests), 200
+        
+        return jsonify({
+            'message': 'No user found.'
+        }), 401
+    except Exception as e:
+        return f"An Error Occured: {e}", 400
+
+@app.route('/friend_requests/outgoing', methods=['GET'])
+def get_outgoing_requests():
+    try:
+        username = request.json['username']
+        users = get_users()
+        for user in users:
+            if user['username'] == username:
+                outgoing_requests = user['outgoing_requests'] if 'outgoing_requests' in user else []
+                return jsonify(outgoing_requests), 200
+        
+        return jsonify({
+            'message': 'No user found.'
+        }), 401
+    except Exception as e:
+        return f"An Error Occured: {e}", 400
 
 # GET /nearby_pins
 @app.route('/nearby_pins', methods=['GET'])
