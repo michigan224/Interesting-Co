@@ -36,7 +36,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        view = ActivityMainBinding.inflate(layoutInflater)
+        // view = ActivityMainBinding.inflate(layoutInflater)
         mapView = findViewById(R.id.mapView)
 
         setContentView(R.layout.activity_main)

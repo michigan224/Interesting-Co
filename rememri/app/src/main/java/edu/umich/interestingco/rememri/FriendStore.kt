@@ -18,7 +18,7 @@ import kotlin.reflect.full.declaredMemberProperties
 object FriendStore {
     private val nFields = Friend::class.declaredMemberProperties.size
 
-    private const val serverUrl = "https://18.222.21.16/"
+    private const val serverUrl = "https://rememri-instance-5obwaiol5q-ue.a.run.app/"
 
     private val client = OkHttpClient()
 
@@ -26,7 +26,7 @@ object FriendStore {
 
     fun getFriends() {
         val request = Request.Builder()
-            .url(serverUrl+"getfriends/")
+            .url(serverUrl+"friends/")
             .build()
 
         client.newCall(request).enqueue(object : Callback {
