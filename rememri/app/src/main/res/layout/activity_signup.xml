@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:tooltipText="@string/password_tooltip">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/topToolbar"
@@ -37,6 +39,7 @@
         android:background="@color/rememri_green"
         android:minWidth="48dp"
         android:minHeight="40dp"
+        android:onClick="returnAccount"
         android:scaleX="1.75"
         android:scaleY="1.75"
         app:layout_constraintBottom_toBottomOf="@+id/topToolbar"
@@ -79,17 +82,17 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="85dp"
         android:onClick="returnMain"
-        app:layout_constraintEnd_toStartOf="@id/accountTitle"
+        app:layout_constraintEnd_toStartOf="@id/signupTitle"
         app:layout_constraintTop_toTopOf="@id/bottomToolbar"
         app:srcCompat="?attr/actionModeCloseDrawable" />
 
     <TextView
-        android:id="@+id/accountTitle"
+        android:id="@+id/signupTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="25dp"
         android:fontFamily="@font/righteous"
-        android:text="@string/account_title"
+        android:text="@string/signup"
         android:textColor="@color/rememri_white"
         android:textSize="30sp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -100,52 +103,91 @@
 
     <ImageView
         android:id="@+id/accountIcon"
-        android:layout_width="118dp"
-        android:layout_height="146dp"
-        android:layout_marginTop="100dp"
+        android:layout_width="85dp"
+        android:layout_height="93dp"
+        android:layout_marginTop="80dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.248"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/topToolbar"
         app:srcCompat="@drawable/baseline_person_outline_18" />
 
+    <Button
+        android:id="@+id/submitButton"
+        android:layout_width="98dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="40dp"
+        android:backgroundTint="@color/rememri_green"
+        android:fontFamily="@font/roboto_slab"
+        android:onClick="returnMain"
+        android:text="@string/submit"
+        android:textColor="@color/rememri_black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.255"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/passwordLabel" />
+
+    <EditText
+        android:id="@+id/editTextTextPassword"
+        android:layout_width="160dp"
+        android:layout_height="42dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="20dp"
+        android:ems="10"
+        android:inputType="textPassword"
+        app:layout_constraintStart_toEndOf="@+id/passwordLabel"
+        app:layout_constraintTop_toBottomOf="@+id/editTextTextMultiLine" />
+
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/passwordLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="84dp"
+        android:layout_marginTop="30dp"
         android:fontFamily="@font/roboto_slab"
-        android:text="@string/guest"
+        android:text="@string/password"
         android:textColor="@color/rememri_black"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/usernameLabel" />
+
+    <TextView
+        android:id="@+id/usernameLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="84dp"
+        android:layout_marginTop="44dp"
+        android:fontFamily="@font/roboto_slab"
+        android:text="@string/username"
+        android:textColor="@color/rememri_black"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/loginPrompt" />
+
+    <EditText
+        android:id="@+id/editTextTextMultiLine"
+        android:layout_width="160dp"
+        android:layout_height="42dp"
+        android:layout_marginStart="2dp"
+        android:layout_marginTop="25dp"
+        android:ems="10"
+        android:gravity="start|top"
+        android:inputType="textMultiLine"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.013"
+        app:layout_constraintStart_toEndOf="@+id/usernameLabel"
+        app:layout_constraintTop_toBottomOf="@+id/loginPrompt" />
+
+    <TextView
+        android:id="@+id/loginPrompt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="@string/signup_prompt"
+        android:textColor="@color/rememri_dark_gray"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.551"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/accountIcon" />
-
-    <Button
-        android:id="@+id/loginButton"
-        android:layout_width="98dp"
-        android:layout_height="48dp"
-        android:layout_marginTop="10dp"
-        android:backgroundTint="@color/rememri_green"
-        android:fontFamily="@font/roboto_slab"
-        android:onClick="returnLogin"
-        android:text="@string/login"
-        android:textColor="@color/rememri_black"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
-
-    <Button
-        android:id="@+id/signUp"
-        android:layout_width="98dp"
-        android:layout_height="48dp"
-        android:layout_marginTop="5dp"
-        android:backgroundTint="@color/rememri_green"
-        android:fontFamily="@font/roboto_slab"
-        android:onClick="returnSignup"
-        android:text="@string/signup"
-        android:textColor="@color/rememri_black"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.501"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/loginButton" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

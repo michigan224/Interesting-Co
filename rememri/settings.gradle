@@ -26,6 +26,7 @@ dependencyResolutionManagement {
         // <---------------------- [end from mapbox]
         google()
         mavenCentral()
+        jcenter()
     }
 }
 rootProject.name = "Rememri"

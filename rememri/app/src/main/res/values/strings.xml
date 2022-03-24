@@ -2,11 +2,21 @@
     <string name="app_name">Rememri</string>
     <string name="ar_button_name">AR</string>
     <string name="friend_title">Friends</string>
+    <string name="account_title">Account</string>
     <string name="list_fragment">View</string>
     <string name="add_fragment">Add</string>
     <string name="requests_fragment">Requests</string>
     <string name="camera">Camera</string>
     <string name="preview">Image</string>
+    <string name="guest">Guest</string>
+    <string name="login">Log In</string>
+    <string name="signup">Sign Up</string>
+    <string name="signup_prompt">Enter new username and password below:</string>
+    <string name="login_prompt">Enter username and password below:</string>
+    <string name="username">Username:</string>
+    <string name="password">Password:</string>
+    <string name="password_tooltip">Enter secure password</string>
+    <string name="submit">Submit</string>
 
     <string name="mapbox_access_token">pk.eyJ1IjoiaW50ZXJlc3RpbmdjbyIsImEiOiJjbDBzdmRnb2cwMmpkM2JxcTZ6Z240aXZkIn0.8ybGcOiM-rQz6vjVpR16Uw</string>
 
