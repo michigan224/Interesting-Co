@@ -1,31 +1,34 @@
 package edu.umich.interestingco.rememri
 
 import android.content.Intent
-import android.icu.util.Output
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.StrictMode
+import android.os.StrictMode.ThreadPolicy
 import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.google.ar.sceneform.utilities.SceneformBufferUtils.readStream
+import androidx.appcompat.app.AppCompatActivity
+import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonParser
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.json.JSONObject
-import java.io.*
-import java.net.URI
+import java.io.OutputStreamWriter
 import java.net.HttpURLConnection
 import java.net.URL
+
 
 private lateinit var url: URL
 private lateinit var urlConnection: HttpURLConnection
 private lateinit var credentials: JSONObject
+
+class LoginResponse {
+    data class SuccessfulLoginResp(
+        val message: String,
+        val token: String
+    )
+}
 
 class LoginActivity :  AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,6 +47,7 @@ class LoginActivity :  AppCompatActivity() {
 
             //Validate sign in!!!
             url = URL("https://rememri-instance-5obwaiol5q-ue.a.run.app/accounts/sign_in")
+            credentials = JSONObject()
             credentials.put("username", submitUsername)
             credentials.put("password", submitPassword)
 
@@ -61,18 +65,25 @@ class LoginActivity :  AppCompatActivity() {
             urlConnection.doOutput = true
             urlConnection.doInput = true
 
+            val policy = ThreadPolicy.Builder()
+                .permitAll().build()
+            StrictMode.setThreadPolicy(policy)
             val outputSt = OutputStreamWriter(urlConnection.outputStream)
             outputSt.write(credentialsString)
             outputSt.flush()
 
             val response = urlConnection.responseCode
             if (response == HttpURLConnection.HTTP_OK) {
-                val myResponse = urlConnection.inputStream.bufferedReader().use { it.readText() }
-                //withContext(Dispatchers.Main)
+                val data = urlConnection.inputStream.bufferedReader().readText()
+                val gson = Gson()
+                val resp = gson.fromJson(data, LoginResponse.SuccessfulLoginResp::class.java)
+                Log.d("JSON", resp.toString())
 
-                val gson = GsonBuilder().setPrettyPrinting().create()
-                val myJson = gson.toJson(JsonParser.parseString(myResponse))
-                Log.d("JSON :", myJson)
+                //withContext(Dispatchers.Main)
+                // val myResponse = urlConnection.inputStream.bufferedReader().use { it.readText() }
+                // val gson = GsonBuilder().setPrettyPrinting().create()
+                // val myJson = gson.toJson(JsonParser.parseString(myResponse))
+                // Log.d("JSON :", myJson)
             } else {
                 Log.e("HTTPURLCONNECTION_ERROR", response.toString())
             }
