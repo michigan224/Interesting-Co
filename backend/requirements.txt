@@ -2,4 +2,3 @@
 flask
 firebase_admin
 geopy
-pyjwt
