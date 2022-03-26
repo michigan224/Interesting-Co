@@ -77,8 +77,8 @@ class LoginActivity :  AppCompatActivity() {
                 val data = urlConnection.inputStream.bufferedReader().readText()
                 val gson = Gson()
                 val resp = gson.fromJson(data, LoginResponse.SuccessfulLoginResp::class.java)
-                Log.d("JSON", resp.toString())
-
+                val token = resp.token
+                Log.d("TOKEN", token)
                 //withContext(Dispatchers.Main)
                 // val myResponse = urlConnection.inputStream.bufferedReader().use { it.readText() }
                 // val gson = GsonBuilder().setPrettyPrinting().create()
