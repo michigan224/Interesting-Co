@@ -11,8 +11,6 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.gson.Gson
-import com.google.gson.GsonBuilder
-import com.google.gson.JsonParser
 import org.json.JSONObject
 import java.io.OutputStreamWriter
 import java.net.HttpURLConnection
@@ -43,49 +41,64 @@ class LoginActivity :  AppCompatActivity() {
             val submitUsername = username.text
             val submitPassword = password.text
 
-            Toast.makeText(this@LoginActivity, submitUsername, Toast.LENGTH_LONG).show()
+            val oldSharedPref = getSharedPreferences("mypref", 0)
+            val token = oldSharedPref.getString("token", "")
+            // token = "" // Uncomment this to ignore saved token
 
-            //Validate sign in!!!
-            url = URL("https://rememri-instance-5obwaiol5q-ue.a.run.app/accounts/sign_in")
-            credentials = JSONObject()
-            credentials.put("username", submitUsername)
-            credentials.put("password", submitPassword)
-
-            val credentialsString = credentials.toString()
-
-            //val values = mapOf("username" to submitUsername, "password" to submitPassword)
-
-            //val objectMapper = ObjectMapper()
-            //val requestBody: String = objectMapper.writeValueAsString(values)
-
-            urlConnection = url.openConnection() as HttpURLConnection
-            urlConnection.requestMethod = "POST"
-            urlConnection.setRequestProperty("Content-Type", "application/json")
-            urlConnection.setRequestProperty("Accept", "application/json")
-            urlConnection.doOutput = true
-            urlConnection.doInput = true
-
-            val policy = ThreadPolicy.Builder()
-                .permitAll().build()
-            StrictMode.setThreadPolicy(policy)
-            val outputSt = OutputStreamWriter(urlConnection.outputStream)
-            outputSt.write(credentialsString)
-            outputSt.flush()
-
-            val response = urlConnection.responseCode
-            if (response == HttpURLConnection.HTTP_OK) {
-                val data = urlConnection.inputStream.bufferedReader().readText()
-                val gson = Gson()
-                val resp = gson.fromJson(data, LoginResponse.SuccessfulLoginResp::class.java)
-                val token = resp.token
-                Log.d("TOKEN", token)
-                //withContext(Dispatchers.Main)
-                // val myResponse = urlConnection.inputStream.bufferedReader().use { it.readText() }
-                // val gson = GsonBuilder().setPrettyPrinting().create()
-                // val myJson = gson.toJson(JsonParser.parseString(myResponse))
-                // Log.d("JSON :", myJson)
+            if (token !== "") {
+                Log.d("TOKEN", "Token already found")
+                Toast.makeText(this@LoginActivity, "USER ALREADY LOGGED IN", Toast.LENGTH_LONG).show()
             } else {
-                Log.e("HTTPURLCONNECTION_ERROR", response.toString())
+
+                Toast.makeText(this@LoginActivity, submitUsername, Toast.LENGTH_LONG).show()
+
+                //Validate sign in!!!
+                url = URL("https://rememri-instance-5obwaiol5q-ue.a.run.app/accounts/sign_in")
+                credentials = JSONObject()
+                credentials.put("username", submitUsername)
+                credentials.put("password", submitPassword)
+
+                val credentialsString = credentials.toString()
+
+                //val values = mapOf("username" to submitUsername, "password" to submitPassword)
+
+                //val objectMapper = ObjectMapper()
+                //val requestBody: String = objectMapper.writeValueAsString(values)
+
+                urlConnection = url.openConnection() as HttpURLConnection
+                urlConnection.requestMethod = "POST"
+                urlConnection.setRequestProperty("Content-Type", "application/json")
+                urlConnection.setRequestProperty("Accept", "application/json")
+                urlConnection.doOutput = true
+                urlConnection.doInput = true
+
+                val policy = ThreadPolicy.Builder()
+                    .permitAll().build()
+                StrictMode.setThreadPolicy(policy)
+                val outputSt = OutputStreamWriter(urlConnection.outputStream)
+                outputSt.write(credentialsString)
+                outputSt.flush()
+
+                val response = urlConnection.responseCode
+                if (response == HttpURLConnection.HTTP_OK) {
+                    val data = urlConnection.inputStream.bufferedReader().readText()
+                    val gson = Gson()
+                    val resp = gson.fromJson(data, LoginResponse.SuccessfulLoginResp::class.java)
+                    val token = resp.token
+                    Log.d("TOKEN", token)
+
+                    val sharedPref = getSharedPreferences("mypref", 0)
+                    val editor = sharedPref.edit()
+                    editor.putString("token", token)
+                    editor.apply()
+                    //withContext(Dispatchers.Main)
+                    // val myResponse = urlConnection.inputStream.bufferedReader().use { it.readText() }
+                    // val gson = GsonBuilder().setPrettyPrinting().create()
+                    // val myJson = gson.toJson(JsonParser.parseString(myResponse))
+                    // Log.d("JSON :", myJson)
+                } else {
+                    Log.e("HTTPURLCONNECTION_ERROR", response.toString())
+                }
             }
 
             //var output : DataOutputStream = urlConnection.outputStream as DataOutputStream
