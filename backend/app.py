@@ -450,9 +450,12 @@ def post_comment():
             'text': text,
             'timestamp': firestore.SERVER_TIMESTAMP,
         }
-        pin = pins_ref.document(pins_ref.where(
-            'post_id', '==', post_id).get()[0].id)
-        pin.collection('comments').add(data)
+        pin = pins_ref.where(
+            'post_id', '==', post_id).get()
+        if not pin:
+            return jsonify({"error": "Pin not found"}), 404
+        pin_doc = pins_ref.document(pin[0].id)
+        pin_doc.collection('comments').add(data)
         return jsonify({"success": True}), 200
     except Exception as e:
         return f"An Error Occured: {e}"
