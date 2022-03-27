@@ -1,6 +1,7 @@
 package edu.umich.interestingco.rememri
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -24,9 +25,10 @@ import android.graphics.drawable.Drawable
 import android.os.Environment
 import android.provider.MediaStore
 import android.widget.ImageButton
-import android.widget.Toast
 import androidx.annotation.DrawableRes
 import androidx.appcompat.content.res.AppCompatResources
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.mapbox.android.gestures.MoveGestureDetector
 import com.mapbox.geojson.Point
 import com.mapbox.maps.CameraOptions
@@ -34,7 +36,6 @@ import com.mapbox.maps.MapView
 import com.mapbox.maps.Style
 import com.mapbox.maps.extension.style.expressions.dsl.generated.interpolate
 import com.mapbox.maps.plugin.LocationPuck2D
-import com.mapbox.maps.plugin.Plugin
 import com.mapbox.maps.plugin.annotation.annotations
 import com.mapbox.maps.plugin.annotation.generated.PointAnnotationOptions
 import com.mapbox.maps.plugin.annotation.generated.createPointAnnotationManager
@@ -45,9 +46,6 @@ import com.mapbox.maps.plugin.locationcomponent.OnIndicatorPositionChangedListen
 import com.mapbox.maps.plugin.locationcomponent.location
 import java.lang.ref.WeakReference
 
-// From Mapbox -->
-//import com.mapbox.maps.Style
-
 var mapView: MapView? = null
 
 class MainActivity : AppCompatActivity() {
@@ -55,7 +53,9 @@ class MainActivity : AppCompatActivity() {
     private val viewState: ImageViewState by viewModels()
     private lateinit var forCropResult: ActivityResultLauncher<Intent>
     private lateinit var forCameraButton: ActivityResultLauncher<Uri>
+    private var fusedLocationClient: FusedLocationProviderClient? = null
 
+    @SuppressLint("MissingPermission")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -76,7 +76,19 @@ class MainActivity : AppCompatActivity() {
             {
                 initLocationComponent()
                 setupGesturesListener()
-                addAnnotationToMap(42.292083,-83.71588)
+                // addAnnotationToMap(42.292083,-83.71588)
+                fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+                fusedLocationClient?.lastLocation!!.addOnCompleteListener(this) { task ->
+                    if (task.isSuccessful && task.result != null) {
+                        getPins(task.result!!.latitude, task.result!!.longitude, this)?.forEach(
+                            (fun(memri: Memri){
+                                addAnnotationToMap((memri.location?.get(0) ?: 0) as Double,(memri.location?.get(1) ?: 0) as Double)
+                            })
+                        )
+                    } else {
+                        Log.w("ERROR", "getLastLocation:exception", task.exception)
+                    }
+                }
             }
         }
 
@@ -94,10 +106,6 @@ class MainActivity : AppCompatActivity() {
                 Manifest.permission.READ_EXTERNAL_STORAGE
             )
         )
-
-        // For Mapbox -->
-        //mapView = findViewById(R.id.mapView)
-        //mapView?.getMapboxMap()?.loadStyleUri(Style.MAPBOX_STREETS)
 
         val cropIntent = initCropIntent()
         forCropResult =
