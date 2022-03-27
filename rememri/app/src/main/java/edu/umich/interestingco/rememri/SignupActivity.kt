@@ -96,6 +96,9 @@ class SignupActivity :  AppCompatActivity() {
                     // val gson = GsonBuilder().setPrettyPrinting().create()
                     // val myJson = gson.toJson(JsonParser.parseString(myResponse))
                     // Log.d("JSON :", myJson)
+                } else if (response == HttpURLConnection.HTTP_CONFLICT) {
+                    Toast.makeText(this@SignupActivity, "Username already exists", Toast.LENGTH_LONG)
+                        .show()
                 } else {
                     Log.e("HTTPURLCONNECTION_ERROR", response.toString())
                 }
