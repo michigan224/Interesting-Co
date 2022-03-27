@@ -74,9 +74,9 @@ class MainActivity : AppCompatActivity() {
                 Style.MAPBOX_STREETS
             )
             {
-                addAnnotationToMap()
                 initLocationComponent()
                 setupGesturesListener()
+                addAnnotationToMap(42.292083,-83.71588)
             }
         }
 
@@ -254,7 +254,7 @@ class MainActivity : AppCompatActivity() {
         locationPermissionHelper.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
-    private fun addAnnotationToMap() {
+    private fun addAnnotationToMap(latitude: Double, longitude: Double) {
         // Create an instance of the Annotation API and get the PointAnnotationManager.
         bitmapFromDrawableRes(
             this@MainActivity,
@@ -265,7 +265,7 @@ class MainActivity : AppCompatActivity() {
             // Set options for the resulting symbol layer.
             val pointAnnotationOptions: PointAnnotationOptions = PointAnnotationOptions()
             // Define a geographic coordinate.
-                .withPoint(Point.fromLngLat(-83.71588, 42.292083))
+                .withPoint(Point.fromLngLat(longitude, latitude))
             // Specify the bitmap you assigned to the point annotation
             // The bitmap will be added to map style automatically.
                 .withIconImage(it)
