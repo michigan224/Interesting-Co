@@ -21,6 +21,7 @@ import android.provider.MediaStore
 import android.widget.ImageButton
 import com.mapbox.maps.MapView
 import com.mapbox.maps.Style
+import com.mapbox.maps.plugin.locationcomponent.location
 
 // From Mapbox -->
 //import com.mapbox.maps.Style
@@ -41,7 +42,18 @@ class MainActivity : AppCompatActivity() {
 
         setContentView(R.layout.activity_main)
 
-        mapView?.getMapboxMap()?.loadStyleUri(Style.MAPBOX_STREETS)
+//        mapView?.getMapboxMap()?.loadStyleUri(Style.MAPBOX_STREETS)
+
+        mapView?.getMapboxMap()?.loadStyleUri(
+            Style.MAPBOX_STREETS
+        )
+        // After the style is loaded, initialize the Location component.
+        {
+            mapView?.location?.updateSettings {
+                enabled = true
+                pulsingEnabled = true
+            }
+        }
 
         // Initializing is asynchrounous- getMapAsync will return a map
        // mapView?.get { map ->
