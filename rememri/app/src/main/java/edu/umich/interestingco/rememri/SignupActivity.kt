@@ -20,6 +20,9 @@ private lateinit var url: URL
 private lateinit var urlConnection: HttpURLConnection
 private lateinit var credentials: JSONObject
 
+
+// var passUsername: String? = ""
+
 class SignupResponse {
     data class SuccessfulSignupResp(
         val message: String,
@@ -30,6 +33,12 @@ class SignupResponse {
 class SignupActivity :  AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val myIntent: Intent = intent
+        // passUsername = myIntent.getStringExtra("username_key")
+
+        // if (passUsername != "") fun returnAccount(view: View?) = startActivity(Intent(this, AccountActivity::class.java).putExtra("username_key", passUsername))
+
         setContentView(R.layout.activity_signup)
 
         val username = findViewById<EditText>(R.id.editTextTextMultiLine)
@@ -48,6 +57,7 @@ class SignupActivity :  AppCompatActivity() {
                 Log.d("TOKEN", "Token already found")
                 Toast.makeText(this@SignupActivity, "USER ALREADY LOGGED IN", Toast.LENGTH_LONG)
                     .show()
+                fun returnAccount(view: View?) = startActivity(Intent(this, AccountActivity::class.java))
             } else {
 
                 Toast.makeText(this@SignupActivity, submitUsername, Toast.LENGTH_LONG).show()
@@ -90,12 +100,11 @@ class SignupActivity :  AppCompatActivity() {
                     val sharedPref = getSharedPreferences("mypref", 0)
                     val editor = sharedPref.edit()
                     editor.putString("token", token)
+                    editor.putString("username", submitUsername.toString())
                     editor.apply()
-                    //withContext(Dispatchers.Main)
-                    // val myResponse = urlConnection.inputStream.bufferedReader().use { it.readText() }
-                    // val gson = GsonBuilder().setPrettyPrinting().create()
-                    // val myJson = gson.toJson(JsonParser.parseString(myResponse))
-                    // Log.d("JSON :", myJson)
+
+                    // passUsername = submitUsername.toString()
+                    fun returnAccount(view: View?) = startActivity(Intent(this, AccountActivity::class.java))
                 } else if (response == HttpURLConnection.HTTP_CONFLICT) {
                     Toast.makeText(this@SignupActivity, "Username already exists", Toast.LENGTH_LONG)
                         .show()

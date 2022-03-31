@@ -10,6 +10,7 @@
     <string name="preview">Image</string>
     <string name="guest">Guest</string>
     <string name="login">Log In</string>
+    <string name="logout">Logout</string>
     <string name="signup">Sign Up</string>
     <string name="signup_prompt">Enter new username and password below:</string>
     <string name="login_prompt">Enter username and password below:</string>

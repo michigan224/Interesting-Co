@@ -90,7 +90,10 @@ class LoginActivity :  AppCompatActivity() {
                     val sharedPref = getSharedPreferences("mypref", 0)
                     val editor = sharedPref.edit()
                     editor.putString("token", token)
+                    editor.putString("username", submitUsername.toString())
                     editor.apply()
+
+                    fun returnAccount(view: View?) = startActivity(Intent(this, AccountActivity::class.java))
                     //withContext(Dispatchers.Main)
                     // val myResponse = urlConnection.inputStream.bufferedReader().use { it.readText() }
                     // val gson = GsonBuilder().setPrettyPrinting().create()

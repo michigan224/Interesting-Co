@@ -113,7 +113,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/roboto_slab"
-        android:text="@string/guest"
         android:textColor="@color/rememri_black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -129,6 +128,21 @@
         android:onClick="returnLogin"
         android:text="@string/login"
         android:textColor="@color/rememri_black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+    <Button
+        android:id="@+id/logoutButton"
+        android:layout_width="98dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="10dp"
+        android:backgroundTint="@color/rememri_green"
+        android:fontFamily="@font/roboto_slab"
+        android:onClick="returnLogin"
+        android:text="@string/logout"
+        android:textColor="@color/rememri_black"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
