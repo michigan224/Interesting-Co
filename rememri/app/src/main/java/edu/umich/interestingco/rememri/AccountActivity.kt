@@ -38,7 +38,7 @@ class AccountActivity : AppCompatActivity() {
                 editor.remove("username")
                 editor.apply()
 
-                fun returnLogin(view: View?) = startActivity(Intent(this, LoginActivity::class.java))
+                startActivity(Intent(this, AccountActivity::class.java))
             }
         }
     }

@@ -104,7 +104,7 @@ class SignupActivity :  AppCompatActivity() {
                     editor.apply()
 
                     // passUsername = submitUsername.toString()
-                    fun returnAccount(view: View?) = startActivity(Intent(this, AccountActivity::class.java))
+                    startActivity(Intent(this, AccountActivity::class.java))
                 } else if (response == HttpURLConnection.HTTP_CONFLICT) {
                     Toast.makeText(this@SignupActivity, "Username already exists", Toast.LENGTH_LONG)
                         .show()

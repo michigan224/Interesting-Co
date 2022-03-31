@@ -93,7 +93,7 @@ class LoginActivity :  AppCompatActivity() {
                     editor.putString("username", submitUsername.toString())
                     editor.apply()
 
-                    fun returnAccount(view: View?) = startActivity(Intent(this, AccountActivity::class.java))
+                    startActivity(Intent(this, AccountActivity::class.java))
                     //withContext(Dispatchers.Main)
                     // val myResponse = urlConnection.inputStream.bufferedReader().use { it.readText() }
                     // val gson = GsonBuilder().setPrettyPrinting().create()

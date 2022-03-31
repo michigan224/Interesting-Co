@@ -135,6 +135,7 @@
         android:layout_marginStart="4dp"
         android:layout_marginTop="20dp"
         android:ems="10"
+        android:textColor="@color/rememri_black"
         android:inputType="textPassword"
         app:layout_constraintStart_toEndOf="@+id/passwordLabel"
         app:layout_constraintTop_toBottomOf="@+id/editTextTextMultiLine" />
@@ -174,6 +175,7 @@
         android:ems="10"
         android:gravity="start|top"
         android:inputType="textMultiLine"
+        android:textColor="@color/rememri_black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.013"
         app:layout_constraintStart_toEndOf="@+id/usernameLabel"
