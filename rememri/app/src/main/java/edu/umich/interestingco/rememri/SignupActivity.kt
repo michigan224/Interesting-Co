@@ -108,11 +108,7 @@ class SignupActivity :  AppCompatActivity() {
                     // passUsername = submitUsername.toString()
                     startActivity(Intent(this, AccountActivity::class.java))
                 } else if (response == HttpURLConnection.HTTP_CONFLICT) {
-                    val data = urlConnection.inputStream.bufferedReader().readText()
-                    val gson = Gson()
-                    val resp = gson.fromJson(data, SignupResponse.FailedSignupResp::class.java)
-                    val message = resp.message
-                    Toast.makeText(this@SignupActivity, message, Toast.LENGTH_LONG)
+                    Toast.makeText(this@SignupActivity, "username already exists", Toast.LENGTH_LONG)
                         .show()
                 } else {
                     Log.e("HTTPURLCONNECTION_ERROR", response.toString())
