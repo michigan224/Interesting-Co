@@ -47,7 +47,7 @@ def sign_up():
         password_hash = hash_obj.hexdigest()
         hashed_password = "$".join([algorithm, salt, password_hash])
 
-        token = generate_user_token({'username': username}).decode('utf-8')
+        token = generate_user_token({'username': username})
 
         data = {
             "username": username,
