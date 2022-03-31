@@ -46,7 +46,6 @@ import java.util.List;
 import androidx.core.content.ContextCompat;
 import androidx.core.app.ActivityCompat;
 import android.content.pm.PackageManager;
-import com.google.ar.core.Camera;
 
 public class ARView extends AppCompatActivity{
     private static final String TAG = ARView.class.getSimpleName();
@@ -58,9 +57,13 @@ public class ARView extends AppCompatActivity{
 
     private double latitude;
     private double longitude;
+    private double prev_latitude;
+    private double prev_longitude;
     private boolean updatedLocation = true;
     private List<ImageView> imageViewList = new ArrayList<ImageView>();
     private LocationManager locationManager;
+    private LocationListener locationListener;
+
 
     private ViewRenderable imageRenderable;
     private boolean hasFinishedLoading = false;
@@ -87,20 +90,14 @@ public class ARView extends AppCompatActivity{
                 imageStage)
                 .handle(
                         (notUsed, throwable) -> {
-
                             if (throwable != null) {
                                 return null;
                             }
-
                             try {
                                 imageRenderable = imageStage.get();
-
-                                // Everything finished loading successfully.
                                 hasFinishedLoading = true;
-
                             } catch (InterruptedException | ExecutionException ex) {
                             }
-
                             return null;
                         });
 
@@ -112,21 +109,17 @@ public class ARView extends AppCompatActivity{
             e.printStackTrace();
         }
 
-//        LocationListener listener = new LocationListener() {
-//            @Override
-//            public void onLocationChanged(@NonNull Location location) {
-//                latitude = location.getLatitude();
-//                longitude = location.getLongitude();
-//                updatedLocation = true;
-//            }
-//        };
         float min_dist_to_update = 1;
         long min_update_time = 1000;
         locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
-//        locationManager.requestLocationUpdates(
-//                LocationManager.NETWORK_PROVIDER,
-//                min_update_time,
-//                min_dist_to_update, listener);
+        locationListener = new LocationListener() {
+            public void onLocationChanged(Location location) {
+                longitude = location.getLongitude();
+                latitude = location.getLatitude();
+            }
+        };
+
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 10, locationListener);
 
         if (locationManager != null) {
             Location location = locationManager
@@ -135,8 +128,11 @@ public class ARView extends AppCompatActivity{
             if (location != null) {
                 latitude = location.getLatitude();
                 longitude = location.getLongitude();
+                prev_latitude = latitude;
+                prev_longitude = longitude;
             }
         }
+
 
         final Handler handler = new Handler();
         final int delay = 10000; // 1000 milliseconds == 1 second
@@ -146,26 +142,17 @@ public class ARView extends AppCompatActivity{
             public void run() {
                 StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
                 StrictMode.setThreadPolicy(policy);
-                if (locationManager != null) {
-                    Location location = locationManager
-                            .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-
-                    if (location != null) {
-                        double new_lat = location.getLatitude();
-                        double new_long = location.getLongitude();
-                        double lat_diff = Math.pow(new_lat - latitude, 2);
-                        double long_diff = Math.pow(new_long - longitude, 2);
-                        double total_diff = Math.sqrt(lat_diff + long_diff);
-
-                        if (total_diff > 0.1) {
-                            updatedLocation = true;
-                            latitude = new_lat;
-                            longitude = new_long;
-                        }
-                    }
+                double lat_diff = Math.pow(prev_latitude - latitude, 2);
+                double long_diff = Math.pow(prev_longitude - longitude, 2);
+                double total_diff = Math.sqrt(lat_diff + long_diff);
+//                Toast.makeText(getApplicationContext(), "Diff: " + String.valueOf(total_diff), Toast.LENGTH_SHORT).show();
+                if (total_diff > 3E-4) {
+                    updatedLocation = true;
+                    prev_latitude = latitude;
+                    prev_longitude = longitude;
                 }
                 if (updatedLocation) {
-
+                    Toast.makeText(getApplicationContext(), "Updated to New Location", Toast.LENGTH_LONG).show();
                     UpdateImages();
                     DisplayImage();
                     updatedLocation = false;
@@ -178,7 +165,8 @@ public class ARView extends AppCompatActivity{
     public void UpdateImages() {
         imageViewList = new ArrayList<ImageView>();
         try{
-            JSONObject jsonObject = getJSONObjectFromURL("https://rememri-instance-5obwaiol5q-ue.a.run.app/nearby_pins?current_location=42.292083,-83.71588");
+            JSONObject jsonObject = getJSONObjectFromURL("https://rememri-instance-5obwaiol5q-ue.a.run.app/nearby_pins?current_location=" +
+                    String.valueOf(latitude) + "," + String.valueOf(longitude));
             System.out.println("Json_obj: " + jsonObject.toString());
             JSONArray jsonArray = jsonObject.getJSONArray("arr");
             for (int it = 0; it < jsonArray.length(); it++) {
@@ -229,10 +217,8 @@ public class ARView extends AppCompatActivity{
                                     float[] camera_pos = arFragment.getArSceneView().getArFrame().getCamera().getPose().getTranslation();
                                     camera_pos[0] += finalJ * 0.5f - finalJ;
                                     camera_pos[2] -= 1;
-//                                    float[] pos = { finalJ * 0.5f - finalJ, 0, -1 };
                                     float[] rotation = { 0, 0, 0, 1 };
                                     Anchor anchor =  session.createAnchor(new Pose(camera_pos, rotation));
-//                                    Anchor anchor = session.createAnchor(arFragment.getArSceneView().getArFrame().getCamera().getPose());
                                     AnchorNode anchorNode = new AnchorNode(anchor);
                                     anchorNode.setRenderable(imageStage.get());
                                     anchorNode.setParent(arFragment.getArSceneView().getScene());
@@ -244,45 +230,6 @@ public class ARView extends AppCompatActivity{
                             });
             j += 1;
         }
-
-//        int[] photos = {R.drawable.goat, R.drawable.duck};
-//        float j = 0;
-//        for (int element : photos) {
-//            ImageView i = new ImageView(this);
-//            i.setImageResource(element);
-//            i.setAdjustViewBounds(true);
-//            i.setLayoutParams(new ViewGroup.LayoutParams(
-//                    100 * 3,
-//                    200 * 3));
-//
-//            CompletableFuture<ViewRenderable> imageStage =
-//                    ViewRenderable.builder().setView(this, i).build();
-//            float finalJ = j;
-//            CompletableFuture.allOf(
-//                    imageStage)
-//                    .handle(
-//                            (notUsed, throwable) -> {
-//
-//                                if (throwable != null) {
-//                                    return null;
-//                                }
-//
-//                                try {
-//                                    Session session = arFragment.getArSceneView().getSession();
-//                                    float[] pos = { finalJ * 0.5f - finalJ, 0, -1 };
-//                                    float[] rotation = { 0, 0, 0, 1 };
-//                                    Anchor anchor =  session.createAnchor(new Pose(pos, rotation));
-//                                    AnchorNode anchorNode = new AnchorNode(anchor);
-//                                    anchorNode.setRenderable(imageStage.get());
-//                                    anchorNode.setParent(arFragment.getArSceneView().getScene());
-//                                    node_list.add(anchorNode);
-//                                } catch (InterruptedException | ExecutionException ex) {
-//                                }
-//
-//                                return null;
-//                            });
-//            j += 1;
-//        }
     }
 
     // JSON request intepreter code from https://stackoverflow.com/questions/34691175/how-to-send-httprequest-and-get-json-response-in-android
@@ -312,16 +259,7 @@ public class ARView extends AppCompatActivity{
 
         return new JSONObject(jsonString);
     }
-
-
-    /**
-     * Returns false and displays an error message if Sceneform can not run, true if Sceneform can run
-     * on this device.
-     *
-     * <p>Sceneform requires Android N on the device as well as OpenGL 3.0 capabilities.
-     *
-     * <p>Finishes the activity if Sceneform can not run
-     */
+    
     public static boolean checkIsSupportedDeviceOrFinish(final Activity activity) {
         if (Build.VERSION.SDK_INT < VERSION_CODES.N) {
             Log.e(TAG, "Sceneform requires Android N or later");
