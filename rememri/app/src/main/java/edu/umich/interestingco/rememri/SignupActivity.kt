@@ -92,7 +92,7 @@ class SignupActivity :  AppCompatActivity() {
                 outputSt.flush()
 
                 val response = urlConnection.responseCode
-                if (response == HttpURLConnection.HTTP_OK) {
+                if (response == HttpURLConnection.HTTP_CREATED) {
                     val data = urlConnection.inputStream.bufferedReader().readText()
                     val gson = Gson()
                     val resp = gson.fromJson(data, SignupResponse.SuccessfulSignupResp::class.java)
