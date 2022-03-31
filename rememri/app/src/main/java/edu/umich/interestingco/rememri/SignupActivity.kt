@@ -25,8 +25,10 @@ private lateinit var credentials: JSONObject
 
 class SignupResponse {
     data class SuccessfulSignupResp(
-        val message: String,
         val token: String
+    )
+    data class FailedSignupResp(
+        val message: String,
     )
 }
 
@@ -106,7 +108,11 @@ class SignupActivity :  AppCompatActivity() {
                     // passUsername = submitUsername.toString()
                     startActivity(Intent(this, AccountActivity::class.java))
                 } else if (response == HttpURLConnection.HTTP_CONFLICT) {
-                    Toast.makeText(this@SignupActivity, "Username already exists", Toast.LENGTH_LONG)
+                    val data = urlConnection.inputStream.bufferedReader().readText()
+                    val gson = Gson()
+                    val resp = gson.fromJson(data, SignupResponse.FailedSignupResp::class.java)
+                    val message = resp.message
+                    Toast.makeText(this@SignupActivity, message, Toast.LENGTH_LONG)
                         .show()
                 } else {
                     Log.e("HTTPURLCONNECTION_ERROR", response.toString())
