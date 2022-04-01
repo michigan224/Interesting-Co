@@ -1,6 +1,7 @@
 package edu.umich.interestingco.rememri
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -27,10 +28,13 @@ class FriendListFragment : Fragment() {
     private lateinit var friendListAdapter: FriendListAdapter
     private lateinit var view1: FragmentFriendListBinding
 
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?): View {
+
+        val sharedPref : SharedPreferences?= activity?.getPreferences(Context.MODE_PRIVATE)
+        val username = sharedPref?.getString("username", "")
+
         val view: View = inflater.inflate(R.layout.fragment_friend_list, container, false)
         val myList: ListView = view.findViewById(R.id.friendList)
         friendListAdapter = FriendListAdapter(requireContext().applicationContext, friends)

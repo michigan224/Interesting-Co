@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.tabs.TabLayout
 
@@ -15,6 +16,16 @@ class FriendActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val oldSharedPref = getSharedPreferences("mypref", 0)
+        val token = oldSharedPref.getString("token", "")
+
+        if (token == "") {
+            Toast.makeText(this@FriendActivity, "Not Logged In", Toast.LENGTH_LONG)
+                .show()
+            startActivity(Intent(this, AccountActivity::class.java))
+        }
+
         setContentView(R.layout.activity_friend)
 
         tabLayout = findViewById<TabLayout>(R.id.tabLayout)
