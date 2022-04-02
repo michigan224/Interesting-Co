@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignBottom="@id/titleNameText"
+            android:layout_alignLeft="@id/titleNameText"
+            android:layout_alignRight="@id/titleNameText"
+            android:layout_alignTop="@id/titleNameText"
+            android:scaleType="fitXY"
+            android:src="@drawable/comment_post_box"/>
+
+        <TextView
+            android:id="@+id/titleNameText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:background="@drawable/comment_post_box"
+            android:gravity="center_horizontal"
+            android:text="Sample Text for a long comment"
+            android:singleLine="true"
+            android:textColor="@color/rememri_black"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:fontFamily="@font/roboto_slab"/>
+    </RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

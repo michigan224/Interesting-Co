@@ -39,7 +39,7 @@ object FriendStore {
 
             override fun onResponse(call: Call, response: Response) {
                 if (response.isSuccessful) {
-                    val friendsReceived = try { JSONObject(response.body?.string() ?: "").getJSONArray("friends") } catch (e: JSONException) { JSONArray() }
+                    val friendsReceived = try { JSONObject(response.body?.string() ?: "").getJSONArray("friend_usernames") } catch (e: JSONException) { JSONArray() }
 
                     friends.clear()
                     for (i in 0 until friendsReceived.length()) {

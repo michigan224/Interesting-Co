@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
+    <!-- "background shadow" -->
+
+    <item>
+        <shape android:shape="rectangle" >
+            <gradient
+                android:angle="90"
+                android:centerColor="#00FF0000"
+                android:centerY="1.5"
+                android:endColor="@color/rememri_white"
+                android:startColor="@color/rememri_black"
+                android:type="linear" />
+
+            <corners android:radius="7dp" />
+        </shape>
+    </item>
+    <!-- background color -->
+    <item
+        android:bottom="3px"
+        android:left="3px"
+        android:right="3px"
+        android:top="3px">
+        <shape>
+            <solid android:color="@color/rememri_white"/>
+
+            <stroke android:width="2dp"
+                android:color="#ff000000"
+
+                />
+
+            <padding android:left="1dp"
+                android:top="1dp"
+                android:right="1dp"
+                android:bottom="1dp"
+                />
+
+            <corners android:bottomRightRadius="7dp" android:bottomLeftRadius="7dp"
+                android:topLeftRadius="7dp" android:topRightRadius="7dp"/>
+        </shape>
+    </item>
+    <!-- over left shadow -->
+
+    <!-- over right shadow -->
+
+    <!-- over top shadow -->
+
+    <!-- over bottom shadow -->
+
+</layer-list>
