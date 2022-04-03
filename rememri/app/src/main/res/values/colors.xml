@@ -15,4 +15,6 @@
     <color name="rememri_light_gray">#DCDCDC</color>
     <color name="rememri_black">#06070E</color>
     <color name="rememri_white">#FFFFFF</color>
+    <color name="rememri_red">#b03030</color>
+    <color name="rememri_dark_green">#6ca26f</color>
 </resources>

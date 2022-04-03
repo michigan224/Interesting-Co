@@ -8,11 +8,42 @@
 
     <!-- TODO: Update blank fragment layout -->
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/add_fragment"
+        android:id="@+id/textViewAddFriend"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/add_friend"
+        android:background="@drawable/comment_box"
+        android:textSize="10pt"
         android:gravity="center"
         android:textColor="@color/rememri_black"
-        android:fontFamily="@font/righteous"/>
+        android:fontFamily="@font/roboto_slab"
+        android:layout_marginTop="15dp"
+        android:layout_marginStart="5dp"/>
+
+    <EditText
+        android:id="@+id/editTextSearch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:padding="5dp"
+        android:background="@drawable/comment_post_box"
+        android:hint="Friend Username"
+        android:textColor="@color/rememri_black"
+        android:translationY="55dp" />
+
+    <Button
+        android:id="@+id/submitButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/submit"
+        android:backgroundTint="@color/rememri_green"
+        android:textColor="@color/rememri_black"
+        android:fontFamily="@font/roboto_slab_bold"
+        android:layout_margin="10dp"
+        android:onClick="returnMain"
+        android:translationY="105dp"/>
+
 
 </FrameLayout>
