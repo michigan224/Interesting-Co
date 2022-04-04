@@ -13,7 +13,7 @@
     <string name="logout">Logout</string>
     <string name="signup">Sign Up</string>
     <string name="comment">Comment</string>
-    <string name="add_friend">Add Friend:</string>
+    <string name="add_friend">Enter Friend Username:</string>
     <string name="signup_prompt">Enter new username and password below:</string>
     <string name="login_prompt">Enter username and password below:</string>
     <string name="username">Username:</string>

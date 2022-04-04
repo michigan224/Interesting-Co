@@ -12,13 +12,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/add_friend"
-        android:background="@drawable/comment_box"
         android:textSize="10pt"
         android:gravity="center"
         android:textColor="@color/rememri_black"
         android:fontFamily="@font/roboto_slab"
         android:layout_marginTop="15dp"
-        android:layout_marginStart="5dp"/>
+        android:layout_marginStart="15dp"/>
 
     <EditText
         android:id="@+id/editTextSearch"
