@@ -17,6 +17,7 @@
     <string name="password">Password:</string>
     <string name="password_tooltip">Enter secure password</string>
     <string name="submit">Submit</string>
+    <string name="public_view">Public View</string>
 
     <string name="Public">Public</string>
     <string name="Private">Private</string>
