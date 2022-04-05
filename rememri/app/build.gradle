@@ -71,4 +71,7 @@ dependencies {
     // For Store Objects
     implementation 'com.android.volley:volley:1.2.1'
     implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
+
+    // For Toggle Switch
+    implementation 'com.llollox:androidtoggleswitch:2.0.1'
 }
