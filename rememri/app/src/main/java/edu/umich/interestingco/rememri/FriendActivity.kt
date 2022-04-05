@@ -28,8 +28,8 @@ class FriendActivity : AppCompatActivity() {
 
         setContentView(R.layout.activity_friend)
 
-        tabLayout = findViewById<TabLayout>(R.id.tabLayout)
-        viewPager = findViewById<ViewPager>(R.id.viewPager)
+        tabLayout = findViewById(R.id.tabLayout)
+        viewPager = findViewById(R.id.viewPager)
         tabLayout?.setupWithViewPager(viewPager)
 
         //tabLayout!!.addTab(tabLayout!!.newTab().setText("View"))
