@@ -26,9 +26,9 @@ object FriendStore {
         val username = oldSharedPref?.getString("username", "")
         val token = oldSharedPref?.getString("token", "")
 
-        val userUrl = serverUrl + "friends?+username=" + username
+        val userUrl = serverUrl + "friends?username=" + username
         val request = Request.Builder()
-            .url(serverUrl+"friends?+username=")
+            .url(userUrl)
             .addHeader("Authorization", "Bearer $token")
             .build()
 
@@ -39,18 +39,23 @@ object FriendStore {
 
             override fun onResponse(call: Call, response: Response) {
                 if (response.isSuccessful) {
-                    val friendsReceived = try { JSONObject(response.body?.string() ?: "").getJSONArray("friend_usernames") } catch (e: JSONException) { JSONArray() }
-
+                    // val friendsReceived = try { JSONObject(response.body?.string() ?: "").getJSONArray("") } catch (e: JSONException) { JSONArray() }
+                    val friendsReceived: Array<String>? = response.body?.string()?.replace("[", "")?.replace("]", "")?.replace("\"", "")?.replace("\n","")?.split(",")?.toTypedArray()
                     friends.clear()
-                    for (i in 0 until friendsReceived.length()) {
-                        val chattEntry = friendsReceived[i] as JSONArray
-                        if (chattEntry.length() == nFields) {
-                            friends.add(Friend(username = chattEntry[0].toString()
-                            ))
-                        } else {
-                            Log.e("getFriends", "Received unexpected number of fields " + chattEntry.length().toString() + " instead of " + nFields.toString())
+                    if (friendsReceived != null) {
+                        for (username in friendsReceived) {
+                            friends.add(Friend(username = username))
                         }
                     }
+//                    for (i in 0 until friendsReceived.size) {
+//                        val chattEntry = friendsReceived[i] as JSONArray
+//                        if (chattEntry.length() == nFields) {
+//                            friends.add(Friend(username = chattEntry[0].toString()
+//                            ))
+//                        } else {
+//                            Log.e("getFriends", "Received unexpected number of fields " + chattEntry.length().toString() + " instead of " + nFields.toString())
+//                        }
+//                    }
                 }
             }
         })

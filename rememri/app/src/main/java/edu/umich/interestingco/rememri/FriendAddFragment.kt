@@ -45,7 +45,7 @@ class FriendAddFragment : Fragment() {
         // Inflate the layout for this fragment
         _binding = FragmentFriendAddBinding.inflate(inflater, container, false)
 
-        val sharedPref : SharedPreferences?= activity?.getPreferences(Context.MODE_PRIVATE)
+        val sharedPref : SharedPreferences?= activity?.getSharedPreferences("mypref", Context.MODE_PRIVATE)
         val username = sharedPref?.getString("username", "")
         val token = sharedPref?.getString("token", "")
 
@@ -85,7 +85,7 @@ class FriendAddFragment : Fragment() {
                     Toast.makeText(activity, "Friend successfully added", Toast.LENGTH_LONG)
                         .show()
                 } else if (response == HttpURLConnection.HTTP_BAD_REQUEST) {
-                    Toast.makeText(activity, myResp.toString(), Toast.LENGTH_LONG)
+                    Toast.makeText(activity, "You've already sent them a request!", Toast.LENGTH_LONG)
                         .show()
                 } else if (response == HttpURLConnection.HTTP_CONFLICT) {
                     Toast.makeText(activity, "requested user doesn't exist", Toast.LENGTH_LONG)
