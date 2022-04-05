@@ -20,6 +20,8 @@ class FriendListAdapter(context: Context, users: ArrayList<Friend?>) :
 
         getItem(position)?.run {
             listItemView.usernameTextView.text = username
+            listItemView.imageView.visibility = View.VISIBLE
+
             //listItemView.root.setBackgroundColor(Color.parseColor(if (position % 2 == 0) "#E0E0E0" else "#EEEEEE"))
         }
 
