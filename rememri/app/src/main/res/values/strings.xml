@@ -18,6 +18,9 @@
     <string name="password_tooltip">Enter secure password</string>
     <string name="submit">Submit</string>
 
+    <string name="Public">Public</string>
+    <string name="Private">Private</string>
+
     <string name="mapbox_access_token">pk.eyJ1IjoiaW50ZXJlc3RpbmdjbyIsImEiOiJjbDBzdmRnb2cwMmpkM2JxcTZ6Z240aXZkIn0.8ybGcOiM-rQz6vjVpR16Uw</string>
 
     <!-- TODO: Remove or change this placeholder text -->
