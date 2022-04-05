@@ -22,7 +22,7 @@ object FriendStore {
     val friends = ObservableArrayList<Friend?>()
 
     fun getFriends(activity: FriendActivity) {
-        val oldSharedPref = activity.getSharedPreferences("mypref", 0)
+        val oldSharedPref = activity.getSharedPreferences("mypref", Context.MODE_PRIVATE)
         val username = oldSharedPref?.getString("username", "")
         val token = oldSharedPref?.getString("token", "")
 

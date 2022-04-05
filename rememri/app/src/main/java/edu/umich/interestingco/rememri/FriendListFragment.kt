@@ -8,7 +8,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ListView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.ListFragment
 import edu.umich.interestingco.rememri.FriendStore.friends
+import edu.umich.interestingco.rememri.databinding.FragmentFriendAddBinding
 import edu.umich.interestingco.rememri.databinding.FragmentFriendListBinding
 
 
@@ -26,13 +28,16 @@ class FriendListFragment : Fragment() {
     // TODO: Rename and change types of parameters
 
     private lateinit var friendListAdapter: FriendListAdapter
-    private lateinit var view1: FragmentFriendListBinding
+//    var _binding: FragmentFriendListBinding? = null
+//    private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?): View {
 
-        val sharedPref : SharedPreferences?= activity?.getPreferences(Context.MODE_PRIVATE)
+//        _binding = FragmentFriendListBinding.inflate(inflater, container, false)
+
+        val sharedPref : SharedPreferences?= activity?.getSharedPreferences("mypref", Context.MODE_PRIVATE)
         val username = sharedPref?.getString("username", "")
 
         val view: View = inflater.inflate(R.layout.fragment_friend_list, container, false)
