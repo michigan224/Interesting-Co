@@ -10,6 +10,7 @@ import org.json.JSONException
 import org.json.JSONObject
 import java.io.IOException
 import android.content.Intent
+import androidx.fragment.app.FragmentActivity
 import kotlin.reflect.full.declaredMemberProperties
 
 object FriendStore {
@@ -21,8 +22,8 @@ object FriendStore {
 
     val friends = ObservableArrayList<Friend?>()
 
-    fun getFriends(activity: FriendActivity) {
-        val oldSharedPref = activity.getSharedPreferences("mypref", Context.MODE_PRIVATE)
+    fun getFriends(activity: FragmentActivity?) {
+        val oldSharedPref = activity?.getSharedPreferences("mypref", Context.MODE_PRIVATE)
         val username = oldSharedPref?.getString("username", "")
         val token = oldSharedPref?.getString("token", "")
 

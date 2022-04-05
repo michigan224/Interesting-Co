@@ -7,8 +7,10 @@
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:paddingTop="5dp"
+        android:paddingStart="10dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/account_icon_outlined" />
@@ -18,7 +20,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toEndOf="@id/imageView"
+        android:textColor="@color/rememri_black"
         app:layout_constraintTop_toTopOf="parent"
+        android:textSize="10pt"
+        android:paddingTop="15dp"
+        android:paddingStart="10dp"
         tools:layout_editor_absoluteY="8dp"
-        android:fontFamily="@font/righteous"/>
+        android:fontFamily="@font/roboto_slab"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
