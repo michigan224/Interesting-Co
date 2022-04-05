@@ -3,30 +3,29 @@ package edu.umich.interestingco.rememri
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.content.Intent
-import android.content.pm.PackageManager
-import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
-import android.util.Log
-import android.view.View
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.activity.viewModels
-import androidx.lifecycle.ViewModel
-import edu.umich.interestingco.rememri.databinding.ActivityMainBinding
 import android.content.ComponentName
 import android.content.ContentValues
 import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
+import android.net.Uri
+import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
+import android.util.Log
+import android.view.View
 import android.widget.ImageButton
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.annotation.DrawableRes
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.lifecycle.ViewModel
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.mapbox.android.gestures.MoveGestureDetector
@@ -44,6 +43,7 @@ import com.mapbox.maps.plugin.gestures.gestures
 import com.mapbox.maps.plugin.locationcomponent.OnIndicatorBearingChangedListener
 import com.mapbox.maps.plugin.locationcomponent.OnIndicatorPositionChangedListener
 import com.mapbox.maps.plugin.locationcomponent.location
+import edu.umich.interestingco.rememri.databinding.ActivityMainBinding
 import java.lang.ref.WeakReference
 
 var mapView: MapView? = null
@@ -361,6 +361,38 @@ class MainActivity : AppCompatActivity() {
             MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
             values
         )
+    }
+
+    fun centerMapOnUserLocation(view: View?){
+        mapView = findViewById(R.id.mapView)
+        locationPermissionHelper = LocationPermissionHelper(WeakReference(this))
+        locationPermissionHelper.checkPermissions {
+            mapView?.getMapboxMap()?.setCamera(
+                CameraOptions.Builder()
+                    .zoom(14.0)
+                    .build()
+            )
+            mapView?.getMapboxMap()?.loadStyleUri(
+                Style.MAPBOX_STREETS
+            )
+            {
+                initLocationComponent()
+                setupGesturesListener()
+                // addAnnotationToMap(42.292083,-83.71588)
+                fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+                fusedLocationClient?.lastLocation!!.addOnCompleteListener(this) { task ->
+                    if (task.isSuccessful && task.result != null) {
+                        getPins(task.result!!.latitude, task.result!!.longitude, this)?.forEach(
+                            (fun(memri: Memri){
+                                addAnnotationToMap((memri.location?.get(0) ?: 0) as Double,(memri.location?.get(1) ?: 0) as Double)
+                            })
+                        )
+                    } else {
+                        Log.w("ERROR", "getLastLocation:exception", task.exception)
+                    }
+                }
+            }
+        }
     }
 }
 
