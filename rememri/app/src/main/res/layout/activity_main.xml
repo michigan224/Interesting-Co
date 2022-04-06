@@ -92,6 +92,7 @@
             android:layout_height="match_parent">
 
             <com.llollox.androidtoggleswitch.widgets.ToggleSwitch
+                android:id="@+id/public_private_switch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
