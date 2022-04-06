@@ -28,6 +28,7 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.lifecycle.ViewModel
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import com.llollox.androidtoggleswitch.widgets.ToggleSwitch
 import com.mapbox.android.gestures.MoveGestureDetector
 import com.mapbox.geojson.Point
 import com.mapbox.maps.CameraOptions
@@ -46,6 +47,7 @@ import com.mapbox.maps.plugin.locationcomponent.location
 import edu.umich.interestingco.rememri.databinding.ActivityMainBinding
 import java.lang.ref.WeakReference
 
+
 var mapView: MapView? = null
 
 class MainActivity : AppCompatActivity() {
@@ -62,35 +64,52 @@ class MainActivity : AppCompatActivity() {
         // view = ActivityMainBinding.inflate(layoutInflater)
         setContentView(R.layout.activity_main)
 
+        // Center the map on the user's location
         mapView = findViewById(R.id.mapView)
-        locationPermissionHelper = LocationPermissionHelper(WeakReference(this))
-        locationPermissionHelper.checkPermissions {
-            mapView?.getMapboxMap()?.setCamera(
-                CameraOptions.Builder()
-                    .zoom(14.0)
-                    .build()
-            )
-            mapView?.getMapboxMap()?.loadStyleUri(
-                Style.MAPBOX_STREETS
-            )
-            {
-                initLocationComponent()
-                setupGesturesListener()
-                // addAnnotationToMap(42.292083,-83.71588)
-                fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-                fusedLocationClient?.lastLocation!!.addOnCompleteListener(this) { task ->
-                    if (task.isSuccessful && task.result != null) {
-                        getPins(task.result!!.latitude, task.result!!.longitude, this)?.forEach(
-                            (fun(memri: Memri){
-                                addAnnotationToMap((memri.location?.get(0) ?: 0) as Double,(memri.location?.get(1) ?: 0) as Double)
-                            })
-                        )
-                    } else {
-                        Log.w("ERROR", "getLastLocation:exception", task.exception)
-                    }
+        centerMapOnUserLocation(mapView)
+
+        // Set position of public/private switch to PUBLIC
+        // [PUBLIC = 0 | PRIVATE = 1]
+        var publicPrivateSwitch: ToggleSwitch? = null
+        publicPrivateSwitch = findViewById(R.id.public_private_switch)
+        publicPrivateSwitch.setCheckedPosition(0)
+
+        Log.d("TOGGLE_SWITCH", "TEST")
+
+        publicPrivateSwitch.setOnClickListener { object : ToggleSwitch.OnChangeListener {
+            override fun onToggleSwitchChanged(position: Int) {
+                Log.d("TOGGLE_SWITCH", "Toggle Switch Clicked")
+
+                if (publicPrivateSwitch.getCheckedPosition() == 0){
+                    Log.d("TOGGLE_SWITCH", "Switch is Public")
+                }
+                else if (publicPrivateSwitch.getCheckedPosition() == 1){
+                    Log.d("TOGGLE_SWITCH", "Switch is Private")
                 }
             }
+        }}
+
+//        publicPrivateSwitch.onChangeListener {
+//
+//            Log.d("TOGGLE_SWITCH", "Toggle Switch Clicked")
+//
+//            if (publicPrivateSwitch.getCheckedPosition() == 0){
+//                Log.d("TOGGLE_SWITCH", "Switch is Public")
+//            }
+//            else if (publicPrivateSwitch.getCheckedPosition() == 1){
+//                Log.d("TOGGLE_SWITCH", "Switch is Private")
+//            }
+//        }
+
+//        findViewById<ToggleSwitch>(R.id.public_private_switch)
+
+        /*
+        *
+        * findViewById<ImageButton>(R.id.cameraButton).setOnClickListener {
+            viewState.imageUri = mediaStoreAlloc("image/jpeg")
+            forCameraButton.launch(viewState.imageUri)
         }
+        * */
 
         // Get the permissions set up
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { results ->
@@ -144,7 +163,7 @@ class MainActivity : AppCompatActivity() {
             viewState.imageUri = mediaStoreAlloc("image/jpeg")
             forCameraButton.launch(viewState.imageUri)
         }
-    }
+    } // onCreate [END]
 
     //---------------------------------MAPBOX--------------------------------//
     private lateinit var locationPermissionHelper: LocationPermissionHelper
@@ -392,6 +411,24 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
             }
+        }
+    }
+
+    // Set 2D map view to PUBLIC or PRIVATE
+    // [PUBLIC = 0 | PRIVATE = 1]
+    fun setPublicPrivateView(view: View?){
+        var publicPrivateSwitch: ToggleSwitch? = null
+        publicPrivateSwitch = findViewById(R.id.public_private_switch)
+
+        val pos = publicPrivateSwitch.getCheckedPosition()
+
+        // If the switch is set to PUBLIC
+        if (pos == 0){
+            Log.d("MAP_SWITCH", "Switch is public")
+        }
+        // If the switch is set to PRIVATE
+        else if (pos == 1) {
+            Log.d("MAP_SWITCH", "Switch is private")
         }
     }
 }
