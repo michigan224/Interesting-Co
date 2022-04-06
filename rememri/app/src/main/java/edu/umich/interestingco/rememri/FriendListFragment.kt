@@ -40,6 +40,7 @@ class FriendListFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?): View {
+        getFriends(activity)
         _binding = FragmentFriendListBinding.inflate(inflater, container, false)
 //        _binding = FragmentFriendListBinding.inflate(inflater, container, false)
 
