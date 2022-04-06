@@ -41,7 +41,15 @@ object FriendStore {
             override fun onResponse(call: Call, response: Response) {
                 if (response.isSuccessful) {
                     // val friendsReceived = try { JSONObject(response.body?.string() ?: "").getJSONArray("") } catch (e: JSONException) { JSONArray() }
-                    val friendsReceived: Array<String>? = response.body?.string()?.replace("[", "")?.replace("]", "")?.replace("\"", "")?.replace("\n","")?.split(",")?.toTypedArray()
+                        val resp: String? = response.body?.string()?.replace("\n", "")
+                    val friendsReceived: Array<String>? = if (resp == "[]"){
+                        null
+                    } else {
+                        resp?.replace("[", "")?.replace("]", "")
+                            ?.replace("\"", "")?.split(",")
+                            ?.toTypedArray()
+
+                    }
                     friends.clear()
                     if (friendsReceived != null) {
                         for (username in friendsReceived) {
