@@ -53,6 +53,7 @@ class FriendListFragment : Fragment() {
         friendListAdapter = FriendListAdapter(binding.root.context, friends)
         binding.friendList.adapter = friendListAdapter
 //        myView.friendList.adapter = friendListAdapter
+        getFriends(activity)
 
         binding.refreshContainer.setOnRefreshListener {
             refreshFriends()

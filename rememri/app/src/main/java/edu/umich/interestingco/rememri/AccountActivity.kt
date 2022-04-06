@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.EditText
 import android.widget.TextView
+import edu.umich.interestingco.rememri.FriendStore.friends
 
 class AccountActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,6 +38,8 @@ class AccountActivity : AppCompatActivity() {
                 editor.remove("token")
                 editor.remove("username")
                 editor.apply()
+
+                friends.clear()
 
                 startActivity(Intent(this, AccountActivity::class.java))
             }
