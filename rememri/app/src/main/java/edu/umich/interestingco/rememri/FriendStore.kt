@@ -21,6 +21,7 @@ object FriendStore {
     private val client = OkHttpClient()
 
     val friends = ObservableArrayList<Friend?>()
+    val requests = ObservableArrayList<Friend?>()
 
     fun getFriends(activity: FragmentActivity?) {
         val oldSharedPref = activity?.getSharedPreferences("mypref", Context.MODE_PRIVATE)
@@ -65,6 +66,44 @@ object FriendStore {
 //                            Log.e("getFriends", "Received unexpected number of fields " + chattEntry.length().toString() + " instead of " + nFields.toString())
 //                        }
 //                    }
+                }
+            }
+        })
+    }
+
+    fun getRequests(activity: FragmentActivity?) {
+        val oldSharedPref = activity?.getSharedPreferences("mypref", Context.MODE_PRIVATE)
+        val username = oldSharedPref?.getString("username", "")
+        val token = oldSharedPref?.getString("token", "")
+
+        val userUrl = "$serverUrl/friend_requests/incoming?username=$username"
+        val request = Request.Builder()
+            .url(userUrl)
+            .addHeader("Authorization", "Bearer $token")
+            .build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                Log.e("getFriendRequestsIncoming", "Failed GET request")
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                if (response.isSuccessful) {
+                    val resp: String? = response.body?.string()?.replace("\n", "")
+                    val requestsReceived: Array<String>? = if (resp == "[]"){
+                        null
+                    } else {
+                        resp?.replace("[", "")?.replace("]", "")
+                            ?.replace("\"", "")?.split(",")
+                            ?.toTypedArray()
+
+                    }
+                    requests.clear()
+                    if (requestsReceived != null) {
+                        for (username in requestsReceived) {
+                            requests.add(Friend(username = username, relationship = "incoming"))
+                        }
+                    }
                 }
             }
         })
