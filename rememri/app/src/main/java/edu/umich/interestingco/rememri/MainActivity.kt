@@ -76,30 +76,30 @@ class MainActivity : AppCompatActivity() {
 
         Log.d("TOGGLE_SWITCH", "TEST")
 
-        publicPrivateSwitch.setOnClickListener { object : ToggleSwitch.OnChangeListener {
-            override fun onToggleSwitchChanged(position: Int) {
-                Log.d("TOGGLE_SWITCH", "Toggle Switch Clicked")
+//        publicPrivateSwitch.setOnClickListener { object : ToggleSwitch.OnChangeListener {
+//            override fun onToggleSwitchChanged(position: Int) {
+//                Log.d("TOGGLE_SWITCH", "Toggle Switch Clicked")
+//
+//                if (publicPrivateSwitch.getCheckedPosition() == 0){
+//                    Log.d("TOGGLE_SWITCH", "Switch is Public")
+//                }
+//                else if (publicPrivateSwitch.getCheckedPosition() == 1){
+//                    Log.d("TOGGLE_SWITCH", "Switch is Private")
+//                }
+//            }
+//        }}
 
-                if (publicPrivateSwitch.getCheckedPosition() == 0){
-                    Log.d("TOGGLE_SWITCH", "Switch is Public")
-                }
-                else if (publicPrivateSwitch.getCheckedPosition() == 1){
-                    Log.d("TOGGLE_SWITCH", "Switch is Private")
-                }
+        publicPrivateSwitch.setOnClickListener {
+            Log.d("TOGGLE_SWITCH", "Toggle Switch Clicked")
+
+            if (publicPrivateSwitch.getCheckedPosition() == 0){
+                Log.d("TOGGLE_SWITCH", "Switch is Public")
             }
-        }}
+            else if (publicPrivateSwitch.getCheckedPosition() == 1){
+                Log.d("TOGGLE_SWITCH", "Switch is Private")
+            }
+        }
 
-//        publicPrivateSwitch.onChangeListener {
-//
-//            Log.d("TOGGLE_SWITCH", "Toggle Switch Clicked")
-//
-//            if (publicPrivateSwitch.getCheckedPosition() == 0){
-//                Log.d("TOGGLE_SWITCH", "Switch is Public")
-//            }
-//            else if (publicPrivateSwitch.getCheckedPosition() == 1){
-//                Log.d("TOGGLE_SWITCH", "Switch is Private")
-//            }
-//        }
 
 //        findViewById<ToggleSwitch>(R.id.public_private_switch)
 
