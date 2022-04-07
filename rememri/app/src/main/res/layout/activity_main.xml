@@ -64,20 +64,7 @@
         app:layout_constraintEnd_toEndOf="@+id/topToolbar"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/centering_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="25dp"
-        android:layout_marginBottom="25dp"
-        android:clickable="true"
-        android:onClick="centerMapOnUserLocation"
-        app:backgroundTint="@color/rememri_white"
-        app:layout_constraintBottom_toBottomOf="@+id/relativeLayout"
-        app:layout_constraintEnd_toEndOf="@+id/relativeLayout"
-        app:srcCompat="@drawable/center_location" />
-
-    <RelativeLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/relativeLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -85,6 +72,19 @@
         android:layout_marginBottom="70dp"
         app:layout_constraintBottom_toTopOf="@+id/bottomToolbar"
         app:layout_constraintTop_toBottomOf="@+id/topToolbar">
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/centering_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="25dp"
+            android:layout_marginBottom="25dp"
+            android:clickable="true"
+            android:onClick="centerMapOnUserLocation"
+            app:backgroundTint="@color/rememri_white"
+            app:layout_constraintBottom_toBottomOf="@+id/relativeLayout"
+            app:layout_constraintEnd_toEndOf="@+id/relativeLayout"
+            app:srcCompat="@drawable/center_location" />
 
         <com.mapbox.maps.MapView
             android:id="@+id/mapView"
@@ -95,13 +95,13 @@
                 android:id="@+id/public_private_switch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentBottom="true"
+
                 app:textToggleLeft="@string/Public"
-                app:textToggleRight="@string/Private"
+                app:textToggleRight="Friends"
                 app:uncheckedBackgroundColor="@color/rememri_white" />
+
         </com.mapbox.maps.MapView>
-    </RelativeLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/bottomToolbar"
