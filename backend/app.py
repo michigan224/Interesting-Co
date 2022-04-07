@@ -334,10 +334,7 @@ def nearby_pins():
             nearby_pins = [pin for pin in visible_pins if distance.distance(
                 tuple(pin['location']), tuple(current_location)).miles < PIN_RADIUS]
             for pin in nearby_pins:
-                if pin['owner_id'] in user['friends']:
-                    pin['is_friend'] = True
-                else:
-                    pin['is_friend'] = False
+                pin['is_friend'] = bool(pin['owner_id'] in user['friends'])
             return jsonify(nearby_pins), 200
         else:
             pins = get_pins()
