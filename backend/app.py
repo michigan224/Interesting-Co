@@ -326,16 +326,15 @@ def nearby_pins():
                 }), 400
             current_location = current_location.split(',')
             pins = get_pins()
-            user = users_ref.where('username', '==', username).get()
+            user = get_user(username)
             if not user:
                 return jsonify({"message": "User not found"}), 401
             visible_pins = [
                 pin for pin in pins if (pin['is_public'] or pin['owner_id'] in user['friends'])]
-            for pin in visible_pins:
-                print(distance.distance(
-                    tuple(pin['location']), tuple(current_location)).miles)
             nearby_pins = [pin for pin in visible_pins if distance.distance(
                 tuple(pin['location']), tuple(current_location)).miles < PIN_RADIUS]
+            for pin in nearby_pins:
+                pin['is_friend'] = bool(pin['owner_id'] in user['friends'])
             return jsonify(nearby_pins), 200
         else:
             pins = get_pins()
@@ -481,12 +480,19 @@ def get_users():
     for doc in users_ref.stream():
         user = doc.to_dict()
         for collection_ref in doc.reference.collections():
-            print(collection_ref.id)
             vals = [val.to_dict()['username']
                     for val in collection_ref.stream()]
             user[collection_ref.id] = vals
         users.append(user)
     return users
+
+
+def get_user(username):
+    users = get_users()
+    for user in users:
+        if username == user['username']:
+            return user
+    return None
 
 # Old boilerplate code for reference
 
