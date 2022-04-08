@@ -70,46 +70,12 @@ class MainActivity : AppCompatActivity() {
 
         // Set position of public/private switch to PUBLIC
         // [PUBLIC = 0 | PRIVATE = 1]
-        var publicPrivateSwitch: ToggleSwitch? = null
-        publicPrivateSwitch = findViewById(R.id.public_private_switch)
-        publicPrivateSwitch.setCheckedPosition(0)
-
-        Log.d("TOGGLE_SWITCH", "TEST")
-
-//        publicPrivateSwitch.setOnClickListener { object : ToggleSwitch.OnChangeListener {
-//            override fun onToggleSwitchChanged(position: Int) {
-//                Log.d("TOGGLE_SWITCH", "Toggle Switch Clicked")
-//
-//                if (publicPrivateSwitch.getCheckedPosition() == 0){
-//                    Log.d("TOGGLE_SWITCH", "Switch is Public")
-//                }
-//                else if (publicPrivateSwitch.getCheckedPosition() == 1){
-//                    Log.d("TOGGLE_SWITCH", "Switch is Private")
-//                }
-//            }
-//        }}
-
-        publicPrivateSwitch.setOnClickListener {
-            Log.d("TOGGLE_SWITCH", "Toggle Switch Clicked")
-
-            if (publicPrivateSwitch.getCheckedPosition() == 0){
-                Log.d("TOGGLE_SWITCH", "Switch is Public")
-            }
-            else if (publicPrivateSwitch.getCheckedPosition() == 1){
-                Log.d("TOGGLE_SWITCH", "Switch is Private")
+        val publicPrivateSwitch: ToggleSwitch = findViewById(R.id.public_private_switch)
+        publicPrivateSwitch.onChangeListener = object : ToggleSwitch.OnChangeListener {
+            override fun onToggleSwitchChanged(position: Int) {
+                Log.d("DEBUG", "position changed to $position")
             }
         }
-
-
-//        findViewById<ToggleSwitch>(R.id.public_private_switch)
-
-        /*
-        *
-        * findViewById<ImageButton>(R.id.cameraButton).setOnClickListener {
-            viewState.imageUri = mediaStoreAlloc("image/jpeg")
-            forCameraButton.launch(viewState.imageUri)
-        }
-        * */
 
         // Get the permissions set up
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { results ->

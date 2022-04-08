@@ -90,16 +90,6 @@
             android:id="@+id/mapView"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-
-            <com.llollox.androidtoggleswitch.widgets.ToggleSwitch
-                android:id="@+id/public_private_switch"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-
-                app:textToggleLeft="@string/Public"
-                app:textToggleRight="Friends"
-                app:uncheckedBackgroundColor="@color/rememri_white" />
-
         </com.mapbox.maps.MapView>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -114,6 +104,22 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <com.llollox.androidtoggleswitch.widgets.ToggleSwitch
+        android:id="@+id/public_private_switch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        app:checkedBackgroundColor="@color/rememri_green"
+        app:checkedTextColor="@color/rememri_black"
+        app:layout_constraintBottom_toBottomOf="@+id/bottomToolbar"
+        app:layout_constraintEnd_toStartOf="@+id/cameraButton"
+        app:layout_constraintStart_toStartOf="@+id/bottomToolbar"
+        app:layout_constraintTop_toBottomOf="@+id/relativeLayout"
+        app:textToggleLeft="@string/Public"
+        app:textToggleRight="@string/friend_title"
+        app:uncheckedBackgroundColor="@color/rememri_white"
+        app:uncheckedTextColor="@color/rememri_black" />
 
     <ImageButton
         android:id="@+id/cameraButton"
