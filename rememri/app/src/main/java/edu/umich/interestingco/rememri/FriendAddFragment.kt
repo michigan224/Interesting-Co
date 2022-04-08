@@ -82,7 +82,7 @@ class FriendAddFragment : Fragment() {
                 val response = urlConnection.responseCode
                 val myResp = urlConnection.responseMessage
                 if (response == HttpURLConnection.HTTP_OK) {
-                    Toast.makeText(activity, "Friend successfully added", Toast.LENGTH_LONG)
+                    Toast.makeText(activity, "Friend request sent.", Toast.LENGTH_LONG)
                         .show()
                 } else if (response == HttpURLConnection.HTTP_BAD_REQUEST) {
                     Toast.makeText(activity, "You've already sent them a request!", Toast.LENGTH_LONG)
