@@ -105,7 +105,7 @@ class FriendRequestsAdapter(context: Context, users: ArrayList<Friend?>) :
                     val response = urlConnection.responseCode
                     val myResp = urlConnection.responseMessage
                     if (response == HttpURLConnection.HTTP_OK) {
-                        Toast.makeText(context, "Friend successfully added", Toast.LENGTH_LONG)
+                        Toast.makeText(context, "Friend successfully rejeted", Toast.LENGTH_LONG)
                             .show()
                     } else if (response == HttpURLConnection.HTTP_BAD_REQUEST) {
                         Toast.makeText(context, "Friend request not found", Toast.LENGTH_LONG)

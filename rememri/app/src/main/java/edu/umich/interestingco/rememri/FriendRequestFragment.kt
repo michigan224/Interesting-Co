@@ -12,6 +12,7 @@ import androidx.databinding.ObservableList
 import androidx.fragment.app.ListFragment
 import edu.umich.interestingco.rememri.databinding.FragmentFriendRequestBinding
 import edu.umich.interestingco.rememri.FriendStore.requests
+import edu.umich.interestingco.rememri.FriendStore.getRequests
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -33,7 +34,7 @@ class FriendRequestFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?): View {
-        FriendStore.getRequests(activity)
+        getRequests(activity)
         _binding = FragmentFriendRequestBinding.inflate(inflater, container, false)
 
         val sharedPref : SharedPreferences?= activity?.getSharedPreferences("mypref", Context.MODE_PRIVATE)
@@ -43,7 +44,6 @@ class FriendRequestFragment : Fragment() {
 
         friendListAdapter = FriendRequestsAdapter(binding.root.context, requests)
         binding.requestList.adapter = friendListAdapter
-        FriendStore.getRequests(activity)
 
         binding.refreshContainer.setOnRefreshListener {
             refreshFriends()
@@ -53,7 +53,7 @@ class FriendRequestFragment : Fragment() {
     }
 
     private fun refreshFriends() {
-        FriendStore.getRequests(activity)
+        getRequests(activity)
 
 
         binding.refreshContainer.isRefreshing = false
