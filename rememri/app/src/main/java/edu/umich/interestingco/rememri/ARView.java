@@ -3,6 +3,7 @@ package edu.umich.interestingco.rememri;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
@@ -223,6 +224,15 @@ public class ARView extends AppCompatActivity{
                                     anchorNode.setRenderable(imageStage.get());
                                     anchorNode.setParent(arFragment.getArSceneView().getScene());
                                     node_list.add(anchorNode);
+                                    String url = "https://rememri-instance-5obwaiol5q-ue.a.run.app/nearby_pins?current_location=" +
+                                            String.valueOf(latitude) + "," + String.valueOf(longitude);
+                                    anchorNode.setOnTapListener((hitResult,motionEvent)->{
+                                        // go to activity post
+                                        Intent intent = new Intent(this, PostActivity.class);
+                                        intent.putExtra("urls", url);
+                                        setContentView(R.layout.activity_post_ar);
+                                        startActivity(intent);
+                                    });
                                 } catch (InterruptedException | ExecutionException ex) {
                                 }
 
