@@ -370,7 +370,7 @@ def specific_pin(pin_id):
             if not user:
                 return jsonify({"message": "User not found"}), 401
             
-            ret_pins = pins_ref.where('post_id', '==', pin_id).get()
+            ret_pins = pins_ref.where('pin_id', '==', pin_id).get()
             
             if not ret_pins:
                 return jsonify({"error": "Pin not found"}), 404
@@ -392,7 +392,7 @@ def specific_pin(pin_id):
                     return jsonify(get_comments_from_pin(pin_id)), 200
                 return jsonify(ret_pin), 200
         else:
-            pins = pins_ref.where('post_id', '==', pin_id).get()
+            pins = pins_ref.where('pin_id', '==', pin_id).get()
             
             if not pins:
                 return jsonify({"error": "Pin not found"}), 404
@@ -427,17 +427,16 @@ def post_pin():
         is_public = request.json['is_public']
         pin_location = request.json['pin_location']
         image = request.json['image']
-        post_id = request.json['post_id']
+        pin_id = str(uuid.uuid4())
         data = {
             'is_public': is_public,
             'location': pin_location,
             'owner_id': username,
             'timestamp': firestore.SERVER_TIMESTAMP,
             'media_url': image,
-            'post_id': post_id
+            'pin_id': pin_id
         }
-        new_pin = pins_ref.add(data)[1]
-        new_pin.collection('comments').add({})
+        pins_ref.add(data)[1]
         return jsonify({"success": True}), 200
     except Exception as e:
         return f"An Error Occured: {e}"
@@ -466,10 +465,10 @@ def post_comment():
             return jsonify({
                 'message': 'No comment provided.'
             }), 400
-        post_id = request.json['post_id']
-        if not post_id:
+        pin_id = request.json['pin_id']
+        if not pin_id:
             return jsonify({
-                'message': 'No post_id provided.'
+                'message': 'No pin_id provided.'
             }), 400
         data = {
             'owner_id': username,
@@ -477,7 +476,7 @@ def post_comment():
             'timestamp': firestore.SERVER_TIMESTAMP,
         }
         pin = pins_ref.where(
-            'post_id', '==', post_id).get()
+            'pin_id', '==', pin_id).get()
         if not pin:
             return jsonify({"error": "Pin not found"}), 404
         pin_doc = pins_ref.document(pin[0].id)
@@ -502,10 +501,10 @@ def get_pins():
     return pins
 
 
-def get_comments_from_pin(post_id):
+def get_comments_from_pin(pin_id):
     pins = get_pins()
     for pin in pins:
-        if post_id == pin['post_id']:
+        if pin_id == pin['pin_id']:
             return pin['comments'] if 'comments' in pin else [] 
     return None
 
