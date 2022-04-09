@@ -437,7 +437,10 @@ def post_pin():
             'pin_id': pin_id
         }
         pins_ref.add(data)[1]
-        return jsonify({"success": True}), 200
+        return jsonify({
+            "success": True,
+            "pin_id": pin_id
+        }), 200
     except Exception as e:
         return f"An Error Occured: {e}"
 
