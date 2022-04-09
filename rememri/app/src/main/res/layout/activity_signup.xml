@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/rememri_white"
     android:tooltipText="@string/password_tooltip">
 
     <androidx.appcompat.widget.Toolbar
@@ -134,6 +135,7 @@
         android:layout_marginStart="4dp"
         android:layout_marginTop="20dp"
         android:ems="10"
+        android:textColor="@color/rememri_black"
         android:inputType="textPassword"
         app:layout_constraintStart_toEndOf="@+id/passwordLabel"
         app:layout_constraintTop_toBottomOf="@+id/editTextTextMultiLine" />
@@ -171,6 +173,7 @@
         android:layout_marginStart="2dp"
         android:layout_marginTop="25dp"
         android:ems="10"
+        android:textColor="@color/rememri_black"
         android:gravity="start|top"
         android:inputType="textMultiLine"
         app:layout_constraintEnd_toEndOf="parent"
