@@ -62,6 +62,7 @@ public class ARView extends AppCompatActivity{
     private double prev_longitude;
     private boolean updatedLocation = true;
     private List<ImageView> imageViewList = new ArrayList<ImageView>();
+    private List<Integer> imageIDList = new ArrayList<Integer>();
     private LocationManager locationManager;
     private LocationListener locationListener;
 
@@ -165,6 +166,7 @@ public class ARView extends AppCompatActivity{
 
     public void UpdateImages() {
         imageViewList = new ArrayList<ImageView>();
+        imageIDList = new ArrayList<Integer>();
         try{
             JSONObject jsonObject = getJSONObjectFromURL("https://rememri-instance-5obwaiol5q-ue.a.run.app/nearby_pins?current_location=" +
                     String.valueOf(latitude) + "," + String.valueOf(longitude));
@@ -173,6 +175,7 @@ public class ARView extends AppCompatActivity{
             for (int it = 0; it < jsonArray.length(); it++) {
                 JSONObject next_image_JSON = jsonArray.getJSONObject(it);
                 String next_image_string = next_image_JSON.getString("media_url");
+                imageIDList.add(Integer.parseInt(next_image_JSON.getString("post_id")));
                 byte[] decodedString = Base64.decode(next_image_string, Base64.DEFAULT);
                 Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0,decodedString.length);
                 ImageView i = new ImageView(this);
@@ -199,11 +202,13 @@ public class ARView extends AppCompatActivity{
         }
 
         float j = 0;
+        int iterator = 0;
         for (ImageView element : imageViewList) {
 
             CompletableFuture<ViewRenderable> imageStage =
                     ViewRenderable.builder().setView(this, element).build();
             float finalJ = j;
+            int finalIt = iterator;
             CompletableFuture.allOf(
                     imageStage)
                     .handle(
@@ -229,7 +234,8 @@ public class ARView extends AppCompatActivity{
                                     anchorNode.setOnTapListener((hitResult,motionEvent)->{
                                         // go to activity post
                                         Intent intent = new Intent(this, PostActivity.class);
-                                        intent.putExtra("urls", url);
+                                        // intent.putExtra("urls", url);
+                                        intent.putExtra("post_id", imageIDList.get(finalIt));
                                         setContentView(R.layout.activity_post_ar);
                                         startActivity(intent);
                                     });
@@ -239,6 +245,7 @@ public class ARView extends AppCompatActivity{
                                 return null;
                             });
             j += 1;
+            iterator += 1;
         }
     }
 
