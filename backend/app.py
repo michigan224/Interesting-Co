@@ -358,6 +358,9 @@ def specific_pin(pin_id):
     """Returns a specific pin if it is accessible by the user"""
     try:
         username = request.args.get('username')
+        comments_only = request.args.get('comments_only')
+        comments_only = True if (comments_only != None and comments_only.lower() == "true") else False
+        
         if username:
             if auth(request, username) is False:
                 return jsonify({
@@ -366,16 +369,40 @@ def specific_pin(pin_id):
             user = users_ref.where('username', '==', username).get()
             if not user:
                 return jsonify({"message": "User not found"}), 401
-            ret_pin = pins_ref.where('post_id', '==', pin_id).get()
-            if not ret_pin:
+            
+            ret_pins = pins_ref.where('post_id', '==', pin_id).get()
+            
+            if not ret_pins:
                 return jsonify({"error": "Pin not found, or not accessible by user"}), 404
-            return jsonify(ret_pin), 200
+
+            ret_pin = ret_pins[0].to_dict()
+            pin_owner = ret_pin["owner_id"]
+            user = get_user(username)
+            # Pin is not public
+            if ret_pin["is_public"] is False:
+                # If user is owner of pin or friend of pin owner, allow access
+                if pin_owner == username or bool('friends' in user and pin_owner in user['friends']):
+                    if comments_only:
+                        return jsonify(get_comments_from_pin(pin_id)), 200
+                    return jsonify(ret_pin), 200
+                else:
+                    return jsonify({"error": "Pin not accessible by user"}), 403
+            else:
+                if comments_only:
+                    return jsonify(get_comments_from_pin(pin_id)), 200
+                return jsonify(ret_pin), 200
         else:
-            pin = pins_ref.where('post_id', '==', pin_id).get()
-            if not pin:
+            pins = pins_ref.where('post_id', '==', pin_id).get()
+            
+            if not pins:
                 return jsonify({"error": "Pin not found"}), 404
-            elif not pin["is_public"]:
-                return jsonify({"error": "Pin not accessible by user"}), 404
+            pin = pins[0].to_dict()
+            if not pin["is_public"]:
+                return jsonify({"error": "Pin not accessible by guest"}), 404
+
+            if comments_only:
+                return jsonify({"error": "Comments not accessible by guest"}), 404
+            
             return jsonify(pin), 200
 
     except Exception as e:
@@ -474,6 +501,13 @@ def get_pins():
         pins.append(pin)
     return pins
 
+
+def get_comments_from_pin(post_id):
+    pins = get_pins()
+    for pin in pins:
+        if post_id == pin['post_id']:
+            return pin['comments'] if 'comments' in pin else [] 
+    return None
 
 def get_users():
     users = []
