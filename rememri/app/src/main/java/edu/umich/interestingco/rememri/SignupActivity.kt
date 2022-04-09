@@ -20,16 +20,27 @@ private lateinit var url: URL
 private lateinit var urlConnection: HttpURLConnection
 private lateinit var credentials: JSONObject
 
+
+// var passUsername: String? = ""
+
 class SignupResponse {
     data class SuccessfulSignupResp(
-        val message: String,
         val token: String
+    )
+    data class FailedSignupResp(
+        val message: String,
     )
 }
 
 class SignupActivity :  AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val myIntent: Intent = intent
+        // passUsername = myIntent.getStringExtra("username_key")
+
+        // if (passUsername != "") fun returnAccount(view: View?) = startActivity(Intent(this, AccountActivity::class.java).putExtra("username_key", passUsername))
+
         setContentView(R.layout.activity_signup)
 
         val username = findViewById<EditText>(R.id.editTextTextMultiLine)
@@ -48,6 +59,7 @@ class SignupActivity :  AppCompatActivity() {
                 Log.d("TOKEN", "Token already found")
                 Toast.makeText(this@SignupActivity, "USER ALREADY LOGGED IN", Toast.LENGTH_LONG)
                     .show()
+                fun returnAccount(view: View?) = startActivity(Intent(this, AccountActivity::class.java))
             } else {
 
                 Toast.makeText(this@SignupActivity, submitUsername, Toast.LENGTH_LONG).show()
@@ -80,7 +92,7 @@ class SignupActivity :  AppCompatActivity() {
                 outputSt.flush()
 
                 val response = urlConnection.responseCode
-                if (response == HttpURLConnection.HTTP_OK) {
+                if (response == HttpURLConnection.HTTP_CREATED) {
                     val data = urlConnection.inputStream.bufferedReader().readText()
                     val gson = Gson()
                     val resp = gson.fromJson(data, SignupResponse.SuccessfulSignupResp::class.java)
@@ -90,14 +102,13 @@ class SignupActivity :  AppCompatActivity() {
                     val sharedPref = getSharedPreferences("mypref", 0)
                     val editor = sharedPref.edit()
                     editor.putString("token", token)
+                    editor.putString("username", submitUsername.toString())
                     editor.apply()
-                    //withContext(Dispatchers.Main)
-                    // val myResponse = urlConnection.inputStream.bufferedReader().use { it.readText() }
-                    // val gson = GsonBuilder().setPrettyPrinting().create()
-                    // val myJson = gson.toJson(JsonParser.parseString(myResponse))
-                    // Log.d("JSON :", myJson)
+
+                    // passUsername = submitUsername.toString()
+                    startActivity(Intent(this, AccountActivity::class.java))
                 } else if (response == HttpURLConnection.HTTP_CONFLICT) {
-                    Toast.makeText(this@SignupActivity, "Username already exists", Toast.LENGTH_LONG)
+                    Toast.makeText(this@SignupActivity, "username already exists", Toast.LENGTH_LONG)
                         .show()
                 } else {
                     Log.e("HTTPURLCONNECTION_ERROR", response.toString())
