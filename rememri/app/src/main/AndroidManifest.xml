@@ -64,6 +64,10 @@
             android:exported="true"
             android:parentActivityName=".MainActivity" />
         <activity
+            android:name=".PostActivity"
+            android:exported="true"
+            android:parentActivityName=".ARView" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
