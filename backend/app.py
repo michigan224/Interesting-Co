@@ -373,7 +373,7 @@ def specific_pin(pin_id):
             ret_pins = pins_ref.where('post_id', '==', pin_id).get()
             
             if not ret_pins:
-                return jsonify({"error": "Pin not found, or not accessible by user"}), 404
+                return jsonify({"error": "Pin not found"}), 404
 
             ret_pin = ret_pins[0].to_dict()
             pin_owner = ret_pin["owner_id"]
@@ -398,10 +398,10 @@ def specific_pin(pin_id):
                 return jsonify({"error": "Pin not found"}), 404
             pin = pins[0].to_dict()
             if not pin["is_public"]:
-                return jsonify({"error": "Pin not accessible by guest"}), 404
+                return jsonify({"error": "Pin not accessible by guest"}), 403
 
             if comments_only:
-                return jsonify({"error": "Comments not accessible by guest"}), 404
+                return jsonify({"error": "Comments not accessible by guest"}), 403
             
             return jsonify(pin), 200
 
