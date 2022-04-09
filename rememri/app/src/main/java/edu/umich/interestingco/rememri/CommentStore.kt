@@ -53,7 +53,7 @@ object CommentStore {
         val username = oldSharedPref?.getString("username", "")
         val token = oldSharedPref?.getString("token", "")
 
-        val userUrl = serverUrl + "pin/$pinId?username=$username"
+        val userUrl = serverUrl + "pin/$pinId?username=$username&comments_only=true"
 
         val request = okhttp3.Request.Builder()
             .url(userUrl)

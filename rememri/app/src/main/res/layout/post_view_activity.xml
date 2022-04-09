@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/rememri_white">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/topToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:background="@color/rememri_green"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/rememriTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="25dp"
+        android:fontFamily="@font/righteous"
+        android:text="@string/app_name"
+        android:textColor="@color/rememri_black"
+        android:textSize="36sp"
+        app:layout_constraintBottom_toBottomOf="@+id/topToolbar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/topToolbar" />
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/bottomToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:background="@color/rememri_white"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageButton
+        android:id="@+id/backButton"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="85dp"
+        android:onClick="returnMain"
+        app:layout_constraintStart_toStartOf="@id/rememriTitle"
+        app:layout_constraintTop_toTopOf="@id/bottomToolbar"
+        app:srcCompat="?attr/actionModeCloseDrawable" />
+
+    <Button
+        android:id="@+id/commentButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/rememri_green"
+        android:fontFamily="@font/roboto_slab"
+        android:onClick="postComment"
+        android:text="@string/submit"
+        android:layout_marginEnd="15dp"
+        android:textColor="@color/rememri_black"
+        app:layout_constraintEnd_toEndOf="@id/bottomToolbar"
+        app:layout_constraintTop_toTopOf="@id/backButton" />
+
+    <ImageView
+        android:id="@+id/imageCard"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:scaleType="centerInside"
+        android:layout_margin="10dp"
+        app:layout_constraintEnd_toEndOf="@id/topToolbar"
+        app:layout_constraintStart_toStartOf="@id/topToolbar"
+        app:layout_constraintTop_toBottomOf="@id/topToolbar"
+        app:layout_constraintWidth_default="percent"
+        app:layout_constraintWidth_percent="0.85"/>
+
+    <com.llollox.androidtoggleswitch.widgets.ToggleSwitch
+        android:id="@+id/switchPublic"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        app:checkedBackgroundColor="@color/rememri_green"
+        app:checkedTextColor="@color/rememri_black"
+        app:textToggleLeft="@string/publicSwitch"
+        app:textToggleRight="@string/friend_title"
+        app:uncheckedBackgroundColor="@color/rememri_white"
+        app:uncheckedTextColor="@color/rememri_black"
+        app:layout_constraintBottom_toTopOf="@id/bottomToolbar"
+        app:layout_constraintStart_toStartOf="@id/backButton"
+        app:layout_constraintEnd_toEndOf="@id/commentButton"
+        android:layout_marginBottom="20dp">
+    </com.llollox.androidtoggleswitch.widgets.ToggleSwitch>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
