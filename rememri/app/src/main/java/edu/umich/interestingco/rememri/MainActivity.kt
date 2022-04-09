@@ -141,7 +141,6 @@ class MainActivity : AppCompatActivity() {
                 }
             }
 
-        // TODO : This might be wrong, it works rn but idk, it worries me
         findViewById<ImageButton>(R.id.cameraButton).setOnClickListener {
             viewState.imageUri = mediaStoreAlloc("image/jpeg")
             forCameraButton.launch(viewState.imageUri)
