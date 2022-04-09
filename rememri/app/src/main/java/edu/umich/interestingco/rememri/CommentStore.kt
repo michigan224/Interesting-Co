@@ -17,12 +17,9 @@ import java.io.IOException
 import android.content.Intent
 import androidx.fragment.app.FragmentActivity
 import kotlin.reflect.full.declaredMemberProperties
-import okhttp3.*
-import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.RequestBody.Companion.asRequestBody
 
 object CommentStore {
-    val comments = arrayListOf<Comment?>()
+    val comments = ObservableArrayList<Comment?>()
     private val nFields = Comment::class.declaredMemberProperties.size
 
     private lateinit var queue: RequestQueue
@@ -49,13 +46,16 @@ object CommentStore {
         queue.add(postRequest)
     }
 
-    fun getComments(activity: PostActivity?, pinId: Int) {
-        val oldSharedPref = activity?.getSharedPreferences("mypref", Context.MODE_PRIVATE)
+    val myComments = ObservableArrayList<Comment?>()
+
+    fun getComments(context: Context, pinId: Int?) {
+        val oldSharedPref = context.getSharedPreferences("mypref", Context.MODE_PRIVATE)
         val username = oldSharedPref?.getString("username", "")
         val token = oldSharedPref?.getString("token", "")
 
         val userUrl = serverUrl + "pin/$pinId?username=$username"
-        val request = Request.Builder()
+
+        val request = okhttp3.Request.Builder()
             .url(userUrl)
             .addHeader("Authorization", "Bearer $token")
             .build()
@@ -67,20 +67,22 @@ object CommentStore {
 
             override fun onResponse(call: Call, response: Response) {
                 if (response.isSuccessful) {
-                    // val friendsReceived = try { JSONObject(response.body?.string() ?: "").getJSONArray("") } catch (e: JSONException) { JSONArray() }
-                    val resp: String? = response.body?.string()?.replace("\n", "")
-                    val commentsReceived: Array<String>? = if (resp == "[]"){
-                        null
-                    } else {
-                        resp?.replace("[", "")?.replace("]", "")
-                            ?.replace("\"", "")?.split(",")
-                            ?.toTypedArray()
+                    val comments = try { JSONObject(response.body?.string() ?: "").getJSONArray("comments") } catch (e: JSONException) { JSONArray() }
+                    // val resp: String? = response.body?.string()?.replace("\n", "")
 
-                    }
-                    comments.clear()
-                    if (commentsReceived != null) {
-                        for (comment in commentsReceived) {
-                            comments.add(Comment(post_id = pinId))
+                    myComments.clear()
+                    for (i in 0 until comments.length()) {
+                        val commentEntry = comments[i] as JSONArray
+                        if (comments.length() == nFields) {
+                            myComments.add(Comment(comment_id = commentEntry[0] as Int?,
+                                text = commentEntry[1].toString(),
+                                timestamp = commentEntry[2].toString(),
+                                post_id = commentEntry[3] as Int?,
+                                owner_id = commentEntry[4].toString(),
+                                is_owned_by_user = commentEntry[5] as Boolean,
+                            ))
+                        } else {
+                            Log.e("getComments", "Received unexpected number of fields " + commentEntry.length().toString() + " instead of " + nFields.toString())
                         }
                     }
                 }

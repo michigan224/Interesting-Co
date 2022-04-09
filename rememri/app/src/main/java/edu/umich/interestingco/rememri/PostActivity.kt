@@ -2,6 +2,7 @@ package edu.umich.interestingco.rememri
 
 import androidx.appcompat.app.AppCompatActivity
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -11,39 +12,41 @@ import android.view.ViewGroup
 import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableList
 import androidx.fragment.app.ListFragment
-import edu.umich.interestingco.rememri.databinding.FragmentFriendRequestBinding
+import edu.umich.interestingco.rememri.databinding.PostViewBinding
 import edu.umich.interestingco.rememri.CommentStore.comments
-import edu.umich.interestingco.rememri.CommentStore.get
+import edu.umich.interestingco.rememri.CommentStore.getComments
 
 
 class PostActivity : AppCompatActivity() {
-    private lateinit var friendListAdapter: Comment
-    var _binding: PostActivityBinding? = null
+    private lateinit var friendListAdapter: CommentAdapter
+    var _binding: PostViewBinding? = null
     private val binding get() = _binding!!
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?): View {
-        getRequests(activity)
-        _binding = FragmentFriendRequestBinding.inflate(inflater, container, false)
+    var myPostId : Int? = null
 
-        val sharedPref : SharedPreferences?= activity?.getSharedPreferences("mypref", Context.MODE_PRIVATE)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        var myIntent = Intent(this, PostActivity::class.java)
+        myPostId = myIntent.getStringExtra("post_id")?.toInt()
+        getComments(this, myPostId)
+        _binding = PostViewBinding.inflate(layoutInflater)
+
+        val sharedPref : SharedPreferences?= getSharedPreferences("mypref", Context.MODE_PRIVATE)
         val username = sharedPref?.getString("username", "")
 
-        requests.addOnListChangedCallback(propertyObserver)
+        comments.addOnListChangedCallback(propertyObserver)
 
-        friendListAdapter = FriendRequestsAdapter(binding.root.context, requests)
-        binding.requestList.adapter = friendListAdapter
+        friendListAdapter = CommentAdapter(binding.root.context, comments)
+        binding.commentList.adapter = friendListAdapter
 
         binding.refreshContainer.setOnRefreshListener {
             refreshFriends()
         }
 
-        return binding.root
     }
 
     private fun refreshFriends() {
-        getRequests(activity)
+        getComments(this, myPostId)
 
 
         binding.refreshContainer.isRefreshing = false
@@ -63,7 +66,7 @@ class PostActivity : AppCompatActivity() {
             itemCount: Int
         ) {
             println("onItemRangeInserted: $positionStart, $itemCount")
-            activity?.runOnUiThread {
+            runOnUiThread {
                 friendListAdapter.notifyDataSetChanged()
             }
         }
@@ -85,6 +88,12 @@ class PostActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
 
-        requests.removeOnListChangedCallback(propertyObserver)
+        comments.removeOnListChangedCallback(propertyObserver)
     }
+
+    fun returnMain(view: View?) = startActivity(Intent(this, MainActivity::class.java))
+
+    fun returnAccount(view: View?) = startActivity(Intent(this, AccountActivity::class.java))
+
+    fun returnFriends(view: View?) = startActivity(Intent(this, FriendActivity::class.java))
 }
