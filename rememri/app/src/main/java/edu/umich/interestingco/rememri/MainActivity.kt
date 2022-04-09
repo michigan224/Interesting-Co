@@ -18,7 +18,9 @@ import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
 import android.view.View
+import android.widget.Button
 import android.widget.ImageButton
+import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
@@ -68,12 +70,27 @@ class MainActivity : AppCompatActivity() {
         mapView = findViewById(R.id.mapView)
         centerMapOnUserLocation(mapView)
 
+        val oldSharedPref = getSharedPreferences("mypref", 0)
+        val token = oldSharedPref.getString("token", "")
+
         // Set position of public/private switch to PUBLIC
-        // [PUBLIC = 0 | PRIVATE = 1]
+        // [PUBLIC = 0 | FRIENDS ONLY = 1]
         val publicPrivateSwitch: ToggleSwitch = findViewById(R.id.public_private_switch)
+        publicPrivateSwitch.setCheckedPosition(0)
+
+        val loginIntent: Intent = Intent(this, AccountActivity::class.java)
+
         publicPrivateSwitch.onChangeListener = object : ToggleSwitch.OnChangeListener {
             override fun onToggleSwitchChanged(position: Int) {
                 Log.d("DEBUG", "position changed to $position")
+
+                if (token == "" && position == 1) {
+                    Toast.makeText(this@MainActivity, "Not Logged In", Toast.LENGTH_LONG)
+                        .show()
+                    startActivity(loginIntent)
+                }
+
+                getFilteredPins()
             }
         }
 
@@ -162,31 +179,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun initLocationComponent() {
         val locationComponentPlugin = mapView?.location
-//        locationComponentPlugin?.updateSettings {
-//            this.enabled = true
-//            this.locationPuck = LocationPuck2D(
-//                bearingImage = AppCompatResources.getDrawable(
-//                    this@MainActivity,
-//                    com.mapbox.maps.plugin.locationcomponent.R.drawable.mapbox_user_puck_icon,
-//                ),
-//                shadowImage = AppCompatResources.getDrawable(
-//                    this@MainActivity,
-//                    com.mapbox.maps.plugin.locationcomponent.R.drawable.mapbox_user_icon_shadow,
-//                ),
-//                scaleExpression = interpolate {
-//                    linear()
-//                    zoom()
-//                    stop {
-//                        literal(0.0)
-//                        literal(0.6)
-//                    }
-//                    stop {
-//                        literal(20.0)
-//                        literal(1.0)
-//                    }
-//                }.toJson()
-//            )
-//        }
+
         locationComponentPlugin?.updateSettings {
             this.enabled = true
             this.locationPuck = LocationPuck2D(
@@ -363,38 +356,50 @@ class MainActivity : AppCompatActivity() {
             {
                 initLocationComponent()
                 setupGesturesListener()
-                // addAnnotationToMap(42.292083,-83.71588)
-                fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-                fusedLocationClient?.lastLocation!!.addOnCompleteListener(this) { task ->
-                    if (task.isSuccessful && task.result != null) {
-                        getPins(task.result!!.latitude, task.result!!.longitude, this)?.forEach(
-                            (fun(memri: Memri){
-                                addAnnotationToMap((memri.location?.get(0) ?: 0) as Double,(memri.location?.get(1) ?: 0) as Double)
-                            })
-                        )
-                    } else {
-                        Log.w("ERROR", "getLastLocation:exception", task.exception)
-                    }
-                }
+                getFilteredPins()
             }
         }
     }
 
-    // Set 2D map view to PUBLIC or PRIVATE
-    // [PUBLIC = 0 | PRIVATE = 1]
-    fun setPublicPrivateView(view: View?){
-        var publicPrivateSwitch: ToggleSwitch? = null
-        publicPrivateSwitch = findViewById(R.id.public_private_switch)
+    // Filter Pins based on the position of the toggle switch
+    // [PUBLIC = 0 | FRIENDS = 1]
+    private fun getFilteredPins(){
+        val publicPrivateSwitch: ToggleSwitch = findViewById(R.id.public_private_switch)
+        val switchPosition: Int = publicPrivateSwitch.getCheckedPosition()
 
-        val pos = publicPrivateSwitch.getCheckedPosition()
-
-        // If the switch is set to PUBLIC
-        if (pos == 0){
-            Log.d("MAP_SWITCH", "Switch is public")
-        }
-        // If the switch is set to PRIVATE
-        else if (pos == 1) {
-            Log.d("MAP_SWITCH", "Switch is private")
+        // disregard error, this function only gets called once permissions have been dealt with
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+        fusedLocationClient?.lastLocation!!.addOnCompleteListener(this) { task ->
+            if (task.isSuccessful && task.result != null) {
+                // If the 2D Map view is set to FRIENDS ONLY
+                if (switchPosition == 1){
+                    getPins(task.result!!.latitude, task.result!!.longitude, this)?.forEach(
+                        (fun(memri: Memri) {
+                            if(memri.is_friend == true){
+                                addAnnotationToMap(
+                                    (memri.location?.get(0) ?: 0) as Double,
+                                    (memri.location?.get(1) ?: 0) as Double
+                                )
+                            }
+                        })
+                    )
+                }
+                // If the 2D Map View is set to PUBLIC
+                else {
+                    getPins(task.result!!.latitude, task.result!!.longitude, this)?.forEach(
+                        (fun(memri: Memri) {
+                            if(memri.is_public == true){
+                                addAnnotationToMap(
+                                    (memri.location?.get(0) ?: 0) as Double,
+                                    (memri.location?.get(1) ?: 0) as Double
+                                )
+                            }
+                        })
+                    )
+                }
+            } else {
+                Log.w("ERROR", "getLastLocation:exception", task.exception)
+            }
         }
     }
 }
