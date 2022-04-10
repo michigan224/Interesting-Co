@@ -109,12 +109,14 @@ class PinViewActivity : AppCompatActivity() {
         val commentText = binding.commentBox
         val commentSubmit = binding.commentSubmitButton
 
+        // TODO : need to test this once 2D pin viewing is possible
         commentSubmit.setOnClickListener {
             val submitText = commentText.text
 
             val oldSharedPref = getSharedPreferences("mypref", 0)
             val token = oldSharedPref.getString("token", "")
 
+            // TODO : not sure if we need to do any redirection for not logged in users...
             if (token == ""){
                 Log.d("COMMENT PERMISSION", "User not logged in, cannot post comment")
             } else {
