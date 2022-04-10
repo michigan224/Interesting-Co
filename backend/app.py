@@ -337,10 +337,10 @@ def nearby_pins():
 
             nearby_pins = []
             for pin in visible_pins:
-                distance = distance.distance(
+                dist = distance.distance(
                     tuple(pin['location']), tuple(current_location)).miles
-                if distance < PIN_RADIUS:
-                    pin['distance'] = distance
+                if dist < PIN_RADIUS:
+                    pin['distance'] = dist
                     pin['is_friend'] = bool(
                         'friends' in user and pin['owner_id'] in user['friends'])
                     nearby_pins.append(pin)
@@ -356,8 +356,12 @@ def nearby_pins():
                     'message': 'No location provided.'
                 }), 400
             current_location = current_location.split(',')
-            nearby_pins = [pin for pin in visible_pins if distance.distance(
-                tuple(pin['location']), tuple(current_location)).miles < PIN_RADIUS]
+            for pin in visible_pins:
+                dist = distance.distance(
+                    tuple(pin['location']), tuple(current_location)).miles
+                if dist < PIN_RADIUS:
+                    pin['distance'] = dist
+                    nearby_pins.append(pin)
             return jsonify(nearby_pins), 200
     except Exception as e:
         return f"An Error Occured: {e}"
