@@ -276,7 +276,7 @@ public class ARView extends AppCompatActivity{
 
         return new JSONObject(jsonString);
     }
-    
+
     public static boolean checkIsSupportedDeviceOrFinish(final Activity activity) {
         if (Build.VERSION.SDK_INT < VERSION_CODES.N) {
             Log.e(TAG, "Sceneform requires Android N or later");

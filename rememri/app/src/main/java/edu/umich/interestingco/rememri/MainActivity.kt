@@ -27,6 +27,7 @@ import androidx.activity.viewModels
 import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.app.ActivityCompat
 import androidx.lifecycle.ViewModel
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -125,7 +126,7 @@ class MainActivity : AppCompatActivity() {
                         val postViewIntent: Intent = Intent(this, PostViewActivity::class.java)
 
                         // Get media url for the new image
-                        postViewIntent.putExtra("media_url", viewState.imageUri)
+                        postViewIntent.putExtra("media_url", viewState.imageUri.toString())
                         Log.d("DEBUG", "added image URI to postViewIntent --> $viewState.imageUri")
 
                         // Get user's current location using the phone location
@@ -389,6 +390,23 @@ class MainActivity : AppCompatActivity() {
 
         // disregard error, this function only gets called once permissions have been dealt with
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return
+        }
         fusedLocationClient?.lastLocation!!.addOnCompleteListener(this) { task ->
             if (task.isSuccessful && task.result != null) {
                 // If the 2D Map view is set to FRIENDS ONLY
