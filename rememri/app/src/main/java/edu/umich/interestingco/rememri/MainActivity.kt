@@ -8,7 +8,9 @@ import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.database.Cursor
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
@@ -16,9 +18,9 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
+import android.util.Base64
 import android.util.Log
 import android.view.View
-import android.widget.Button
 import android.widget.ImageButton
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
@@ -48,6 +50,7 @@ import com.mapbox.maps.plugin.locationcomponent.OnIndicatorBearingChangedListene
 import com.mapbox.maps.plugin.locationcomponent.OnIndicatorPositionChangedListener
 import com.mapbox.maps.plugin.locationcomponent.location
 import edu.umich.interestingco.rememri.databinding.ActivityMainBinding
+import java.io.ByteArrayOutputStream
 import java.lang.ref.WeakReference
 
 
@@ -121,12 +124,34 @@ class MainActivity : AppCompatActivity() {
                                 contentResolver.delete(this, null, null)
                             }
                         }
-                        viewState.imageUri = it
+                        var filePath: String? = null
+                        val _uri: Uri? = it
+                        Log.d("", "URI = $_uri")
+                        if (_uri != null && "content" == _uri.scheme) {
+                            val cursor: Cursor? = this.contentResolver.query(
+                                _uri,
+                                arrayOf(MediaStore.Images.ImageColumns.DATA),
+                                null,
+                                null,
+                                null
+                            )
+                            cursor?.moveToFirst()
+                            filePath = cursor?.getString(0)
+                            cursor?.close()
+                        } else {
+                            filePath = _uri!!.path
+                        }
+                        Log.d("", "Chosen path = $filePath")
+                        val bm = BitmapFactory.decodeFile(filePath)
+                        val baos = ByteArrayOutputStream()
+                        bm.compress(Bitmap.CompressFormat.JPEG, 100, baos) // bm is the bitmap object
+                        val b: ByteArray = baos.toByteArray()
+                        val encodedImage: String = Base64.encodeToString(b, Base64.DEFAULT)
 
                         val postViewIntent: Intent = Intent(this, PinAddActivity::class.java)
 
                         // Get media url for the new image
-                        postViewIntent.putExtra("media_url", viewState.imageUri.toString())
+                        postViewIntent.putExtra("media_url", encodedImage)
                         Log.d("DEBUG", "added image URI to postViewIntent --> $viewState.imageUri")
 
                         // Get user's current location using the phone location
