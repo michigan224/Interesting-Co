@@ -122,25 +122,25 @@ class MainActivity : AppCompatActivity() {
                         }
                         viewState.imageUri = it
 
-                        // Start Post View Activity
-
                         val postViewIntent: Intent = Intent(this, PostViewActivity::class.java)
+
+                        // Get media url for the new image
                         postViewIntent.putExtra("media_url", viewState.imageUri)
+                        Log.d("DEBUG", "added image URI to postViewIntent --> $viewState.imageUri")
 
                         // Get user's current location using the phone location
                         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
                         fusedLocationClient?.lastLocation!!.addOnCompleteListener(this) { task ->
                             if (task.isSuccessful && task.result != null) {
-                                getPins(task.result!!.latitude, task.result!!.longitude, this)?.forEach(
-                                    (fun(memri: Memri){
-                                        addAnnotationToMap((memri.location?.get(0) ?: 0) as Double,(memri.location?.get(1) ?: 0) as Double)
-                                    })
-                                )
+                                val coordArray = arrayOf(task.result!!.latitude, task.result!!.longitude)
+                                postViewIntent.putExtra("pin_location", coordArray)
+                                Log.d("DEBUG", "added pin location to postViewIntent --> $coordArray")
                             } else {
                                 Log.w("ERROR", "getLastLocation:exception", task.exception)
                             }
                         }
-                        postViewIntent.putExtra("pin_location", mapView?.location)
+
+                        // Start Post View Activity with new added info
                         startActivity(postViewIntent)
                     }
                 } else {
