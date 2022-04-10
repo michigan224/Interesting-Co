@@ -3,8 +3,6 @@ package edu.umich.interestingco.rememri
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import android.graphics.*
-import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.os.StrictMode
@@ -14,23 +12,18 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.llollox.androidtoggleswitch.widgets.ToggleSwitch
 import com.squareup.picasso.Picasso
-import okhttp3.Call
-import okhttp3.Callback
-import okhttp3.Response
 import org.json.JSONArray
-import org.json.JSONException
 import org.json.JSONObject
-import java.io.IOException
 import java.io.OutputStreamWriter
 import java.net.HttpURLConnection
 import java.net.URL
 
 
-class PostViewActivity : AppCompatActivity()  {
+class PinAddActivity : AppCompatActivity()  {
     private var isPublic : Boolean = true
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.post_view_activity)
+        setContentView(R.layout.activity_pin_add)
         val myIntent = intent.extras
         val mimageView = findViewById<ImageView>(R.id.imageCard)
         val sharedPref : SharedPreferences?= getSharedPreferences("mypref", Context.MODE_PRIVATE)
@@ -40,18 +33,6 @@ class PostViewActivity : AppCompatActivity()  {
         val rawImage = Uri.parse(myIntent?.getString("raw_media_url"))
 
         Picasso.get().load(rawImage).into(mimageView)
-//        val imageRounded = Bitmap.createBitmap(mbitmap.width, mbitmap.height, mbitmap.config)
-//        val canvas = Canvas(imageRounded)
-//        val mpaint = Paint()
-//        mpaint.isAntiAlias = true
-//        mpaint.shader = BitmapShader(mbitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP)
-//        canvas.drawRoundRect(
-//            RectF(0F, 0F, mbitmap.width.toFloat(), mbitmap.height.toFloat()),
-//            100f,
-//            100f,
-//            mpaint
-//        ) // Round Image Corner 100 100 100 100
-//        mimageView.setImageBitmap(imageRounded)
 
         val mySwitch : ToggleSwitch = findViewById(R.id.switchPublic)
         mySwitch.checkedPosition = 0
@@ -97,7 +78,6 @@ class PostViewActivity : AppCompatActivity()  {
             outputSt.flush()
 
             val response = urlConnection.responseCode
-            val myResp = urlConnection.responseMessage
             if (response == HttpURLConnection.HTTP_OK) {
                 Toast.makeText(this, "Pin Posted!", Toast.LENGTH_LONG)
                     .show()

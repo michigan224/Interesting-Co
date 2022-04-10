@@ -148,7 +148,7 @@ class MainActivity : AppCompatActivity() {
                         val b: ByteArray = baos.toByteArray()
                         val encodedImage: String = Base64.encodeToString(b, Base64.DEFAULT)
 
-                        val postViewIntent: Intent = Intent(this, PostViewActivity::class.java)
+                        val postViewIntent: Intent = Intent(this, PinAddActivity::class.java)
 
                         // Get media url for the new image
                         postViewIntent.putExtra("raw_media_url", viewState.imageUri.toString())
