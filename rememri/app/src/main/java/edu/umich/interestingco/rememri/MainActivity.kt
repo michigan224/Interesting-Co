@@ -151,23 +151,23 @@ class MainActivity : AppCompatActivity() {
                         val postViewIntent: Intent = Intent(this, PostViewActivity::class.java)
 
                         // Get media url for the new image
+                        postViewIntent.putExtra("raw_media_url", viewState.imageUri.toString())
                         postViewIntent.putExtra("media_url", encodedImage)
-                        Log.d("DEBUG", "added image URI to postViewIntent --> $viewState.imageUri")
+                        Log.d("DEBUG", "added image URI to postViewIntent --> ${viewState.imageUri}")
 
                         // Get user's current location using the phone location
                         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
                         fusedLocationClient?.lastLocation!!.addOnCompleteListener(this) { task ->
                             if (task.isSuccessful && task.result != null) {
-                                val coordArray = arrayOf(task.result!!.latitude, task.result!!.longitude)
+                                val coordArray: Array<Double> = arrayOf(task.result!!.latitude, task.result!!.longitude)
                                 postViewIntent.putExtra("pin_location", coordArray)
                                 Log.d("DEBUG", "added pin location to postViewIntent --> $coordArray")
+                                // Start Post View Activity with new added info
+                                startActivity(postViewIntent)
                             } else {
                                 Log.w("ERROR", "getLastLocation:exception", task.exception)
                             }
                         }
-
-                        // Start Post View Activity with new added info
-                        startActivity(postViewIntent)
                     }
                 } else {
                     Log.d("Crop", result.resultCode.toString())

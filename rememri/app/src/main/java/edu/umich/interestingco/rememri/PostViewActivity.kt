@@ -36,9 +36,10 @@ class PostViewActivity : AppCompatActivity()  {
         val sharedPref : SharedPreferences?= getSharedPreferences("mypref", Context.MODE_PRIVATE)
         val username = sharedPref?.getString("username", "")
         val token = sharedPref?.getString("token", "")
-        val myImage = Uri.parse(myIntent?.getString("media_url"))
+        val myImage = myIntent?.getString("media_url")
+        val rawImage = Uri.parse(myIntent?.getString("raw_media_url"))
 
-        Picasso.get().load(myImage).into(mimageView)
+        Picasso.get().load(rawImage).into(mimageView)
 //        val imageRounded = Bitmap.createBitmap(mbitmap.width, mbitmap.height, mbitmap.config)
 //        val canvas = Canvas(imageRounded)
 //        val mpaint = Paint()
@@ -70,12 +71,13 @@ class PostViewActivity : AppCompatActivity()  {
             val apiRequest =
                 "https://rememri-instance-5obwaiol5q-ue.a.run.app/pin"
             val url = URL(apiRequest)
+            val array: Array<Double?>? = myIntent?.getSerializable("pin_location") as Array<Double?>?
 
             val request : JSONObject = JSONObject()
             request.put("username", username)
             request.put("is_public", isPublic)
-            request.put("pin_location", myIntent?.getString("pin_location"))
-            request.put("image", myImage.toString())
+            request.put("pin_location", JSONArray(array))
+            request.put("image", myImage)
 
             val requestString = request.toString()
 
