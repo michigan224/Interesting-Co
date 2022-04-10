@@ -4,7 +4,6 @@
 import json
 import os
 from flask import Flask, request, jsonify
-from torch import double
 from firebase_admin import credentials, firestore, initialize_app
 from geopy import distance
 import hashlib
