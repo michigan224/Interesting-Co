@@ -35,7 +35,7 @@ class PinAddActivity : AppCompatActivity()  {
         Picasso.get().load(rawImage).into(mimageView)
 
         val mySwitch : ToggleSwitch = findViewById(R.id.switchPublic)
-        mySwitch.checkedPosition = 0
+        mySwitch.setCheckedPosition(0)
 
         mySwitch.onChangeListener = object : ToggleSwitch.OnChangeListener {
             override fun onToggleSwitchChanged(position: Int) {
