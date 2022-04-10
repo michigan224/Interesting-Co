@@ -4,6 +4,7 @@
 import json
 import os
 from flask import Flask, request, jsonify
+from torch import double
 from firebase_admin import credentials, firestore, initialize_app
 from geopy import distance
 import hashlib
@@ -311,7 +312,9 @@ def get_outgoing_requests():
 @app.route('/nearby_pins', methods=['GET'])
 def nearby_pins():
     """Returns a list of nearby pins"""
-    PIN_RADIUS = request.args.get('radius') or 15
+    PIN_RADIUS = 15
+    if request.args.get('radius'):
+        PIN_RADIUS = float(request.args.get('radius'))
     try:
         username = request.args.get('username')
         if username:
@@ -329,12 +332,20 @@ def nearby_pins():
             user = get_user(username)
             if not user:
                 return jsonify({"message": "User not found"}), 401
+
             visible_pins = [
                 pin for pin in pins if (pin['is_public'] or ('friends' in user and pin['owner_id'] in user['friends']))]
-            nearby_pins = [pin for pin in visible_pins if distance.distance(
-                tuple(pin['location']), tuple(current_location)).miles < PIN_RADIUS]
-            for pin in nearby_pins:
-                pin['is_friend'] = bool('friends' in user and pin['owner_id'] in user['friends'])
+
+            nearby_pins = []
+            for pin in visible_pins:
+                distance = distance.distance(
+                    tuple(pin['location']), tuple(current_location)).miles
+                if distance < PIN_RADIUS:
+                    pin['distance'] = distance
+                    pin['is_friend'] = bool(
+                        'friends' in user and pin['owner_id'] in user['friends'])
+                    nearby_pins.append(pin)
+
             return jsonify(nearby_pins), 200
         else:
             pins = get_pins()
@@ -359,8 +370,9 @@ def specific_pin(pin_id):
     try:
         username = request.args.get('username')
         comments_only = request.args.get('comments_only')
-        comments_only = True if (comments_only != None and comments_only.lower() == "true") else False
-        
+        comments_only = True if (
+            comments_only != None and comments_only.lower() == "true") else False
+
         if username:
             if auth(request, username) is False:
                 return jsonify({
@@ -369,9 +381,9 @@ def specific_pin(pin_id):
             user = users_ref.where('username', '==', username).get()
             if not user:
                 return jsonify({"message": "User not found"}), 401
-            
+
             ret_pins = pins_ref.where('pin_id', '==', pin_id).get()
-            
+
             if not ret_pins:
                 return jsonify({"error": "Pin not found"}), 404
 
@@ -393,7 +405,7 @@ def specific_pin(pin_id):
                 return jsonify(ret_pin), 200
         else:
             pins = pins_ref.where('pin_id', '==', pin_id).get()
-            
+
             if not pins:
                 return jsonify({"error": "Pin not found"}), 404
             pin = pins[0].to_dict()
@@ -402,7 +414,7 @@ def specific_pin(pin_id):
 
             if comments_only:
                 return jsonify({"error": "Comments not accessible by guest"}), 403
-            
+
             return jsonify(pin), 200
 
     except Exception as e:
@@ -508,8 +520,9 @@ def get_comments_from_pin(pin_id):
     pins = get_pins()
     for pin in pins:
         if pin_id == pin['pin_id']:
-            return pin['comments'] if 'comments' in pin else [] 
+            return pin['comments'] if 'comments' in pin else []
     return None
+
 
 def get_users():
     users = []
