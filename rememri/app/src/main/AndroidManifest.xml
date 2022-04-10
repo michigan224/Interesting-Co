@@ -64,11 +64,11 @@
             android:exported="true"
             android:parentActivityName=".MainActivity" />
         <activity
-            android:name=".PostActivity"
+            android:name=".PinViewActivity"
             android:exported="true"
             android:parentActivityName=".ARView" />
         <activity
-            android:name=".PostViewActivity"
+            android:name=".PinAddActivity"
             android:exported="true"
             android:parentActivityName=".MainActivity" />
         <activity

@@ -123,7 +123,7 @@ class MainActivity : AppCompatActivity() {
                         }
                         viewState.imageUri = it
 
-                        val postViewIntent: Intent = Intent(this, PostViewActivity::class.java)
+                        val postViewIntent: Intent = Intent(this, PinAddActivity::class.java)
 
                         // Get media url for the new image
                         postViewIntent.putExtra("media_url", viewState.imageUri.toString())

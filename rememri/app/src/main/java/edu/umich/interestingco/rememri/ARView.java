@@ -8,31 +8,23 @@ import android.os.Build;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.MotionEvent;
 import android.widget.Toast;
 import com.google.ar.core.Anchor;
-import com.google.ar.core.HitResult;
-import com.google.ar.core.Plane;
 import com.google.ar.core.Pose;
 import com.google.ar.core.Session;
 import com.google.ar.sceneform.AnchorNode;
 import com.google.ar.sceneform.rendering.ModelRenderable;
 import com.google.ar.sceneform.rendering.ViewRenderable;
 import com.google.ar.sceneform.ux.ArFragment;
-import com.google.ar.sceneform.ux.TransformableNode;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import android.os.Handler;
 import android.widget.ImageView;
-import android.graphics.drawable.Drawable;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import edu.umich.interestingco.rememri.R;
 import android.view.ViewGroup;
 import java.util.ArrayList;
 import android.location.LocationManager;
@@ -233,7 +225,7 @@ public class ARView extends AppCompatActivity{
                                             String.valueOf(latitude) + "," + String.valueOf(longitude);
                                     anchorNode.setOnTapListener((hitResult,motionEvent)->{
                                         // go to activity post
-                                        Intent intent = new Intent(this, PostActivity.class);
+                                        Intent intent = new Intent(this, PinViewActivity.class);
                                         // intent.putExtra("urls", url);
                                         intent.putExtra("post_id", imageIDList.get(finalIt));
                                         setContentView(R.layout.activity_post_ar);
