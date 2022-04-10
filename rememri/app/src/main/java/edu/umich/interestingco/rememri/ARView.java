@@ -187,7 +187,7 @@ public class ARView extends AppCompatActivity{
             for (int it = 0; it < jsonArray.length(); it++) {
                 JSONObject next_image_JSON = jsonArray.getJSONObject(it);
                 String next_image_string = next_image_JSON.getString("media_url");
-                imageIDList.add(Integer.parseInt(next_image_JSON.getString("post_id")));
+                imageIDList.add(Integer.parseInt(next_image_JSON.getString("pin_id")));
                 byte[] decodedString = Base64.decode(next_image_string, Base64.DEFAULT);
                 Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0,decodedString.length);
                 ImageView i = new ImageView(this);
@@ -265,6 +265,8 @@ public class ARView extends AppCompatActivity{
         if (username != "") {
             urlString = urlString + "&username=" + username;
         }
+        float distance = 1.5f;
+        urlString = urlString + "&radius=" + String.valueOf(distance);
 
         URL url = new URL(urlString);
         urlConnection = (HttpURLConnection) url.openConnection();
