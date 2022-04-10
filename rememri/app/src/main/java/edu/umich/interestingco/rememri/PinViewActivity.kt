@@ -7,6 +7,7 @@ import android.content.SharedPreferences
 import android.graphics.*
 import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
+import android.os.StrictMode
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -19,6 +20,7 @@ import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableList
 import androidx.fragment.app.ListFragment
 import coil.load
+import com.google.gson.Gson
 import com.squareup.picasso.Picasso
 import edu.umich.interestingco.rememri.databinding.ActivityPinViewBinding
 import edu.umich.interestingco.rememri.CommentStore.comments
@@ -31,6 +33,9 @@ import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 import java.io.IOException
+import java.io.OutputStreamWriter
+import java.net.HttpURLConnection
+import java.net.URL
 
 
 class PinViewActivity : AppCompatActivity() {
@@ -40,6 +45,10 @@ class PinViewActivity : AppCompatActivity() {
     private val client = OkHttpClient()
     var myPostId : Int? = null
     var myImage = ""
+
+    private lateinit var url: URL
+    private lateinit var urlConnection: HttpURLConnection
+    private lateinit var commentObj: JSONObject
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -102,6 +111,42 @@ class PinViewActivity : AppCompatActivity() {
 
         commentSubmit.setOnClickListener {
             val submitText = commentText.text
+
+            val oldSharedPref = getSharedPreferences("mypref", 0)
+            val token = oldSharedPref.getString("token", "")
+
+            if (token == ""){
+                Log.d("COMMENT PERMISSION", "User not logged in, cannot post comment")
+            } else {
+                url = URL("https://rememri-instance-5obwaiol5q-ue.a.run.app/comment")
+                commentObj = JSONObject()
+                commentObj.put("comment_text", submitText)
+
+                val commentString = commentObj.toString()
+
+                urlConnection = url.openConnection() as HttpURLConnection
+                urlConnection.requestMethod = "POST"
+                urlConnection.setRequestProperty("Content-Type", "application/json")
+                urlConnection.setRequestProperty("Accept", "application/json")
+                urlConnection.doOutput = true
+                urlConnection.doInput = true
+
+                val policy = StrictMode.ThreadPolicy.Builder()
+                    .permitAll().build()
+                StrictMode.setThreadPolicy(policy)
+                val outputSt = OutputStreamWriter(urlConnection.outputStream)
+                outputSt.write(commentString)
+                outputSt.flush()
+
+                val response = urlConnection.responseCode
+                if (response == HttpURLConnection.HTTP_OK) {
+                    Log.d("COMMENT", "HTTP request for comment submission went through")
+                } else {
+                    Log.e("HTTPURLCONNECTION_ERROR", response.toString())
+                }
+
+            }
+
         }
 
     }
