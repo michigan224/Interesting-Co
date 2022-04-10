@@ -64,7 +64,21 @@
         app:layout_constraintEnd_toEndOf="@+id/topToolbar"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <RelativeLayout
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/centering_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="25dp"
+        android:layout_marginBottom="25dp"
+        android:clickable="true"
+        android:onClick="centerMapOnUserLocation"
+        app:backgroundTint="@color/rememri_white"
+        app:layout_constraintBottom_toBottomOf="@+id/relativeLayout"
+        app:layout_constraintEnd_toEndOf="@+id/relativeLayout"
+        app:srcCompat="@drawable/center_location" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/relativeLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="70dp"
@@ -75,11 +89,9 @@
         <com.mapbox.maps.MapView
             android:id="@+id/mapView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:mapbox_cameraTargetLat="59.31"
-            app:mapbox_cameraTargetLng="18.06"
-            app:mapbox_cameraZoom="9.0" />
-    </RelativeLayout>
+            android:layout_height="match_parent">
+        </com.mapbox.maps.MapView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/bottomToolbar"
@@ -92,6 +104,23 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <com.llollox.androidtoggleswitch.widgets.ToggleSwitch
+        android:id="@+id/public_private_switch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        app:checkedBackgroundColor="@color/rememri_green"
+        app:checkedTextColor="@color/rememri_black"
+        app:layout_constraintBottom_toBottomOf="@+id/bottomToolbar"
+        app:layout_constraintEnd_toStartOf="@+id/cameraButton"
+        app:layout_constraintStart_toStartOf="@+id/bottomToolbar"
+        app:layout_constraintTop_toBottomOf="@+id/relativeLayout"
+        app:textToggleLeft="@string/Public"
+        app:textToggleRight="@string/friend_title"
+        app:uncheckedBackgroundColor="@color/rememri_white"
+        app:uncheckedTextColor="@color/rememri_black" >
+    </com.llollox.androidtoggleswitch.widgets.ToggleSwitch>
 
     <ImageButton
         android:id="@+id/cameraButton"
