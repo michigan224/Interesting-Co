@@ -126,6 +126,7 @@ class MainActivity : AppCompatActivity() {
                         }
                         var filePath: String? = null
                         val _uri: Uri? = it
+                        viewState.imageUri = it
                         Log.d("", "URI = $_uri")
                         if (_uri != null && "content" == _uri.scheme) {
                             val cursor: Cursor? = this.contentResolver.query(
