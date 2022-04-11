@@ -1,9 +1,9 @@
 package edu.umich.interestingco.rememri
 
 import android.content.Intent
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
 import android.widget.EditText
 import android.widget.TextView
 import edu.umich.interestingco.rememri.FriendStore.friends
@@ -54,4 +54,3 @@ class AccountActivity : AppCompatActivity() {
 
     fun returnLogin(view: View?) = startActivity(Intent(this, LoginActivity::class.java))
 }
-
