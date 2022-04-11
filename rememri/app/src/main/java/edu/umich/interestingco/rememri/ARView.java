@@ -57,7 +57,7 @@ public class ARView extends AppCompatActivity{
     private double prev_longitude;
     private boolean updatedLocation = true;
     private List<ImageView> imageViewList = new ArrayList<ImageView>();
-    private List<Integer> imageIDList = new ArrayList<Integer>();
+    private List<String> imageIDList = new ArrayList<String>();
     private LocationManager locationManager;
     private LocationListener locationListener;
 
@@ -170,7 +170,7 @@ public class ARView extends AppCompatActivity{
 
     public void UpdateImages() {
         imageViewList = new ArrayList<ImageView>();
-        imageIDList = new ArrayList<Integer>();
+        imageIDList = new ArrayList<String>();
         try{
             JSONObject jsonObject = getJSONObjectFromURL("https://rememri-instance-5obwaiol5q-ue.a.run.app/nearby_pins?current_location=" +
                     String.valueOf(latitude) + "," + String.valueOf(longitude), username, token);
@@ -179,7 +179,7 @@ public class ARView extends AppCompatActivity{
             for (int it = 0; it < jsonArray.length(); it++) {
                 JSONObject next_image_JSON = jsonArray.getJSONObject(it);
                 String next_image_string = next_image_JSON.getString("media_url");
-                imageIDList.add(Integer.parseInt(next_image_JSON.getString("pin_id")));
+                imageIDList.add(next_image_JSON.getString("pin_id"));
                 byte[] decodedString = Base64.decode(next_image_string, Base64.DEFAULT);
                 Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0,decodedString.length);
                 ImageView i = new ImageView(this);
@@ -257,7 +257,7 @@ public class ARView extends AppCompatActivity{
         if (username != "") {
             urlString = urlString + "&username=" + username;
         }
-        float distance = 1.5f;
+        float distance = 0.05f;
         urlString = urlString + "&radius=" + String.valueOf(distance);
 
         URL url = new URL(urlString);
