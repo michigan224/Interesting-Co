@@ -1,30 +1,20 @@
 package edu.umich.interestingco.rememri
 
-import androidx.appcompat.app.AppCompatActivity
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.*
-import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import android.os.StrictMode
 import android.util.Log
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableList
-import androidx.fragment.app.ListFragment
-import coil.load
-import com.google.gson.Gson
 import com.squareup.picasso.Picasso
-import edu.umich.interestingco.rememri.databinding.ActivityPinViewBinding
 import edu.umich.interestingco.rememri.CommentStore.comments
 import edu.umich.interestingco.rememri.CommentStore.getComments
+import edu.umich.interestingco.rememri.databinding.ActivityPinViewBinding
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.OkHttpClient
@@ -36,14 +26,17 @@ import java.io.IOException
 import java.io.OutputStreamWriter
 import java.net.HttpURLConnection
 import java.net.URL
+import java.util.concurrent.CountDownLatch
 
 
 class PinViewActivity : AppCompatActivity() {
     private lateinit var friendListAdapter: CommentAdapter
-    private var _binding: ActivityPinViewBinding? = null
-    private val binding get() = _binding!!
+    //private var _binding: ActivityPinViewBinding? = null
+    // private val binding get() = _binding!!
+    //private val binding = ActivityPinViewBinding.inflate(layoutInflater)
+    private lateinit var binding: ActivityPinViewBinding
     private val client = OkHttpClient()
-    var myPostId : Int? = null
+    var myPostId : String? = null
     var myImage = ""
 
     private lateinit var url: URL
@@ -53,9 +46,8 @@ class PinViewActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         var myIntent = intent.extras
-        myPostId = myIntent?.getInt("pin_id")
+        myPostId = myIntent?.getString("pin_id")
         getComments(this, myPostId)
-        val mimageView = binding.imageCard
         val sharedPref : SharedPreferences?= getSharedPreferences("mypref", Context.MODE_PRIVATE)
         val username = sharedPref?.getString("username", "")
         val token = sharedPref?.getString("token", "")
@@ -66,27 +58,29 @@ class PinViewActivity : AppCompatActivity() {
             .addHeader("Authorization", "Bearer $token")
             .build()
 
+        val countDownLatch = CountDownLatch(1)
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 Log.e("getFriends", "Failed GET request")
+                countDownLatch.countDown();
             }
 
             override fun onResponse(call: Call, response: Response) {
                 if (response.isSuccessful) {
                     val myJSON = try {
-                        JSONObject(response.body?.string() ?: "").getJSONArray("media_url")
+                        JSONObject(response.body?.string() ?: "").get("media_url")
                     } catch (e: JSONException) {
                         JSONArray()
                     }
                     myImage = myJSON.toString()
+                    countDownLatch.countDown();
                 }
             }
         })
-
+        countDownLatch.await()
+        binding = ActivityPinViewBinding.inflate(layoutInflater)
+        val mimageView = binding.imageCard
         Picasso.get().load(myImage).into(mimageView)
-
-        _binding = ActivityPinViewBinding.inflate(layoutInflater)
-
         comments.addOnListChangedCallback(propertyObserver)
 
         friendListAdapter = CommentAdapter(binding.root.context, comments)
@@ -117,7 +111,7 @@ class PinViewActivity : AppCompatActivity() {
             val token = oldSharedPref.getString("token", "")
 
             // TODO : not sure if we need to do any redirection for not logged in users...
-            if (token == ""){
+            if (token == "") {
                 Log.d("COMMENT PERMISSION", "User not logged in, cannot post comment")
             } else {
                 url = URL("https://rememri-instance-5obwaiol5q-ue.a.run.app/comment")
@@ -148,9 +142,7 @@ class PinViewActivity : AppCompatActivity() {
                 }
 
             }
-
         }
-
     }
 
     private fun refreshFriends() {

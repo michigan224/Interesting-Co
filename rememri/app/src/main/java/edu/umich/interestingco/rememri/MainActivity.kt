@@ -288,7 +288,7 @@ class MainActivity : AppCompatActivity() {
         locationPermissionHelper.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
-    private fun addAnnotationToMap(latitude: Double, longitude: Double, post_id: String, distance: Double) {
+    private fun addAnnotationToMap(latitude: Double, longitude: Double, pin_id: String, distance: Double) {
         // Create an instance of the Annotation API and get the PointAnnotationManager.
         if (distance < 0.5) {
             bitmapFromDrawableRes(
@@ -308,7 +308,7 @@ class MainActivity : AppCompatActivity() {
                 pointAnnotationManager?.create(pointAnnotationOptions)
                 pointAnnotationManager?.addClickListener(OnPointAnnotationClickListener {
                     val intent = Intent(this, PinViewActivity::class.java)
-                    intent.putExtra("post_id", post_id)
+                    intent.putExtra("pin_id", pin_id)
                     setContentView(R.layout.activity_post_ar)
                     startActivity(intent)
                     true

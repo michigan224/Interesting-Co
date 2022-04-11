@@ -53,7 +53,7 @@ object CommentStore {
     val myCommentsReturn = ObservableArrayList<Comment?>()
     private lateinit var urlConnection: HttpURLConnection
 
-    fun getComments(context: Context, pinId: Int?) {
+    fun getComments(context: Context, pinId: String?) {
         val oldSharedPref = context.getSharedPreferences("mypref", Context.MODE_PRIVATE)
         val username = oldSharedPref?.getString("username", "")
         val token = oldSharedPref?.getString("token", "")
