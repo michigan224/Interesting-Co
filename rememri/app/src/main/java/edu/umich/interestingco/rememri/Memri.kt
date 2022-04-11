@@ -1,6 +1,6 @@
 package edu.umich.interestingco.rememri
 
-class Memri(var pin_id: Int? = null,
+class Memri(var pin_id: String? = null,
             var owner_id: String? = null,
             var is_public: Boolean? = null,
             var is_friend: Boolean? = null,
