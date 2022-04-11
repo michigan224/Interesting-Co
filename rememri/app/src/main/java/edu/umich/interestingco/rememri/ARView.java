@@ -39,6 +39,9 @@ import java.util.List;
 import androidx.core.content.ContextCompat;
 import androidx.core.app.ActivityCompat;
 import android.content.pm.PackageManager;
+import android.content.SharedPreferences;
+import okhttp3.*;
+import android.util.Base64;
 
 public class ARView extends AppCompatActivity{
     private static final String TAG = ARView.class.getSimpleName();
@@ -63,6 +66,10 @@ public class ARView extends AppCompatActivity{
     private boolean hasFinishedLoading = false;
     ArrayList<AnchorNode> node_list = new ArrayList<AnchorNode>();
 
+    SharedPreferences userDetails;
+    private String username;
+    private String token;
+
     @Override
     @SuppressWarnings({"AndroidApiChecker", "FutureReturnValueIgnored"})
     // CompletableFuture requires api level 24
@@ -79,6 +86,11 @@ public class ARView extends AppCompatActivity{
 
         CompletableFuture<ViewRenderable> imageStage =
                 ViewRenderable.builder().setView(this, R.layout.image_view).build();
+
+        Context context = this;
+        userDetails = context.getSharedPreferences("mypref", MODE_PRIVATE);
+        username = userDetails.getString("username", "");
+        token = userDetails.getString("token", "");
 
         CompletableFuture.allOf(
                 imageStage)
@@ -161,13 +173,13 @@ public class ARView extends AppCompatActivity{
         imageIDList = new ArrayList<Integer>();
         try{
             JSONObject jsonObject = getJSONObjectFromURL("https://rememri-instance-5obwaiol5q-ue.a.run.app/nearby_pins?current_location=" +
-                    String.valueOf(latitude) + "," + String.valueOf(longitude));
+                    String.valueOf(latitude) + "," + String.valueOf(longitude), username, token);
             System.out.println("Json_obj: " + jsonObject.toString());
             JSONArray jsonArray = jsonObject.getJSONArray("arr");
             for (int it = 0; it < jsonArray.length(); it++) {
                 JSONObject next_image_JSON = jsonArray.getJSONObject(it);
                 String next_image_string = next_image_JSON.getString("media_url");
-                imageIDList.add(Integer.parseInt(next_image_JSON.getString("post_id")));
+                imageIDList.add(Integer.parseInt(next_image_JSON.getString("pin_id")));
                 byte[] decodedString = Base64.decode(next_image_string, Base64.DEFAULT);
                 Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0,decodedString.length);
                 ImageView i = new ImageView(this);
@@ -221,8 +233,6 @@ public class ARView extends AppCompatActivity{
                                     anchorNode.setRenderable(imageStage.get());
                                     anchorNode.setParent(arFragment.getArSceneView().getScene());
                                     node_list.add(anchorNode);
-                                    String url = "https://rememri-instance-5obwaiol5q-ue.a.run.app/nearby_pins?current_location=" +
-                                            String.valueOf(latitude) + "," + String.valueOf(longitude);
                                     anchorNode.setOnTapListener((hitResult,motionEvent)->{
                                         // go to activity post
                                         Intent intent = new Intent(this, PinViewActivity.class);
@@ -242,17 +252,28 @@ public class ARView extends AppCompatActivity{
     }
 
     // JSON request intepreter code from https://stackoverflow.com/questions/34691175/how-to-send-httprequest-and-get-json-response-in-android
-    public static JSONObject getJSONObjectFromURL(String urlString) throws IOException, JSONException {
+    public static JSONObject getJSONObjectFromURL(String urlString, String username, String token) throws IOException, JSONException {
         HttpURLConnection urlConnection = null;
+        if (username != "") {
+            urlString = urlString + "&username=" + username;
+        }
+        float distance = 1.5f;
+        urlString = urlString + "&radius=" + String.valueOf(distance);
+
         URL url = new URL(urlString);
         urlConnection = (HttpURLConnection) url.openConnection();
         urlConnection.setRequestMethod("GET");
         urlConnection.setReadTimeout(10000);
         urlConnection.setConnectTimeout(15000);
-        urlConnection.setDoOutput(true);
+        //urlConnection.setDoOutput(true);
+        if (username != "") {
+            urlConnection.setRequestProperty("Authorization", String.format("Bearer %s", token));
+        }
         urlConnection.connect();
 
-        BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()));
+        BufferedReader br = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+
+        //BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()));
         StringBuilder sb = new StringBuilder();
 
         String line;

@@ -356,6 +356,7 @@ def nearby_pins():
                     'message': 'No location provided.'
                 }), 400
             current_location = current_location.split(',')
+            nearby_pins = []
             for pin in visible_pins:
                 dist = distance.distance(
                     tuple(pin['location']), tuple(current_location)).miles
