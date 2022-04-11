@@ -288,30 +288,49 @@ class MainActivity : AppCompatActivity() {
         locationPermissionHelper.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
-    private fun addAnnotationToMap(latitude: Double, longitude: Double, post_id: String) {
+    private fun addAnnotationToMap(latitude: Double, longitude: Double, post_id: String, distance: Double) {
         // Create an instance of the Annotation API and get the PointAnnotationManager.
-        bitmapFromDrawableRes(
-            this@MainActivity,
-            R.drawable.red_marker
-        )?.let {
-            val annotationApi = mapView?.annotations
-            val pointAnnotationManager = annotationApi?.createPointAnnotationManager(mapView!!)
-            // Set options for the resulting symbol layer.
-            val pointAnnotationOptions: PointAnnotationOptions = PointAnnotationOptions()
-            // Define a geographic coordinate.
-                .withPoint(Point.fromLngLat(longitude, latitude))
-            // Specify the bitmap you assigned to the point annotation
-            // The bitmap will be added to map style automatically.
-                .withIconImage(it)
-            // Add the resulting pointAnnotation to the map.
-            pointAnnotationManager?.create(pointAnnotationOptions)
-            pointAnnotationManager?.addClickListener(OnPointAnnotationClickListener {
-                val intent = Intent(this, PinViewActivity::class.java)
-                intent.putExtra("post_id", post_id)
-                setContentView(R.layout.activity_post_ar)
-                startActivity(intent)
-                true
-            })
+        if (distance < 0.5) {
+            bitmapFromDrawableRes(
+                this@MainActivity,
+                R.drawable.white_marker
+            )?.let {
+                val annotationApi = mapView?.annotations
+                val pointAnnotationManager = annotationApi?.createPointAnnotationManager(mapView!!)
+                // Set options for the resulting symbol layer.
+                val pointAnnotationOptions: PointAnnotationOptions = PointAnnotationOptions()
+                    // Define a geographic coordinate.
+                    .withPoint(Point.fromLngLat(longitude, latitude))
+                    // Specify the bitmap you assigned to the point annotation
+                    // The bitmap will be added to map style automatically.
+                    .withIconImage(it)
+                // Add the resulting pointAnnotation to the map.
+                pointAnnotationManager?.create(pointAnnotationOptions)
+                pointAnnotationManager?.addClickListener(OnPointAnnotationClickListener {
+                    val intent = Intent(this, PinViewActivity::class.java)
+                    intent.putExtra("post_id", post_id)
+                    setContentView(R.layout.activity_post_ar)
+                    startActivity(intent)
+                    true
+                })
+            }
+        } else {
+            bitmapFromDrawableRes(
+                this@MainActivity,
+                R.drawable.red_marker
+            )?.let {
+                val annotationApi = mapView?.annotations
+                val pointAnnotationManager = annotationApi?.createPointAnnotationManager(mapView!!)
+                // Set options for the resulting symbol layer.
+                val pointAnnotationOptions: PointAnnotationOptions = PointAnnotationOptions()
+                    // Define a geographic coordinate.
+                    .withPoint(Point.fromLngLat(longitude, latitude))
+                    // Specify the bitmap you assigned to the point annotation
+                    // The bitmap will be added to map style automatically.
+                    .withIconImage(it)
+                // Add the resulting pointAnnotation to the map.
+                pointAnnotationManager?.create(pointAnnotationOptions)
+            }
         }
     }
 
@@ -452,7 +471,8 @@ class MainActivity : AppCompatActivity() {
                                 addAnnotationToMap(
                                     (memri.location?.get(0) ?: 0) as Double,
                                     (memri.location?.get(1) ?: 0) as Double,
-                                    memri.pin_id as String
+                                    memri.pin_id as String,
+                                    memri.distance as Double
                                 )
                             }
                         })
@@ -466,7 +486,8 @@ class MainActivity : AppCompatActivity() {
                                 addAnnotationToMap(
                                     (memri.location?.get(0) ?: 0) as Double,
                                     (memri.location?.get(1) ?: 0) as Double,
-                                    memri.pin_id as String
+                                    memri.pin_id as String,
+                                    memri.distance as Double
                                 )
                             }
                         })
