@@ -58,7 +58,7 @@ object CommentStore {
         val username = oldSharedPref?.getString("username", "")
         val token = oldSharedPref?.getString("token", "")
 
-        val userUrl = URL(serverUrl + "pin/$pinId?username=$username&comments_only=true")
+        val userUrl = URL("$serverUrl/pin/$pinId?username=$username&comments_only=true")
         urlConnection = userUrl.openConnection() as HttpURLConnection
         urlConnection.requestMethod = "GET"
         urlConnection.setRequestProperty("Authorization", "Bearer $token")
