@@ -237,8 +237,8 @@ public class ARView extends AppCompatActivity{
                                         // go to activity post
                                         Intent intent = new Intent(this, PinViewActivity.class);
                                         // intent.putExtra("urls", url);
-                                        intent.putExtra("post_id", imageIDList.get(finalIt));
-                                        setContentView(R.layout.activity_post_ar);
+                                        intent.putExtra("pin_id", imageIDList.get(finalIt));
+                                        setContentView(R.layout.activity_pin_view);
                                         startActivity(intent);
                                     });
                                 } catch (InterruptedException | ExecutionException ex) {
