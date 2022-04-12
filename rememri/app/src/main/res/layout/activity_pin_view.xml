@@ -97,6 +97,7 @@
         android:fontFamily="@font/roboto_slab"
         android:textColor="@color/rememri_black"
         android:onClick="postComment"
+        android:windowSoftInputMode="stateVisible|adjustResize"
         />
 
     <Button
@@ -151,14 +152,19 @@
         android:id="@+id/commentBox"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="95dp"
-        android:layout_marginTop="105dp"
-        android:layout_marginEnd="25dp"
         android:layout_marginStart="25dp"
+        android:layout_marginTop="100dp"
+        android:layout_marginEnd="25dp"
         android:background="@drawable/comment_post_box"
-        app:layout_constraintTop_toBottomOf="@id/imageCard"
-        app:layout_constraintStart_toStartOf="@id/imageCard"
+        android:paddingLeft="5dp"
+        android:paddingTop="5dp"
+        android:paddingRight="5dp"
+        android:paddingBottom="50dp"
+        android:visibility="gone"
+        android:windowSoftInputMode="stateVisible|adjustResize"
+        app:layout_constraintBottom_toTopOf="@+id/commentList"
         app:layout_constraintEnd_toEndOf="@id/imageCard"
-        android:visibility="gone"/>
+        app:layout_constraintStart_toStartOf="@id/imageCard"
+        app:layout_constraintTop_toBottomOf="@id/topToolbar" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
