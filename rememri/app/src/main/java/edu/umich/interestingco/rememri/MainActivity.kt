@@ -309,7 +309,7 @@ class MainActivity : AppCompatActivity() {
                 pointAnnotationManager?.addClickListener(OnPointAnnotationClickListener {
                     val intent = Intent(this, PinViewActivity::class.java)
                     intent.putExtra("pin_id", pin_id)
-                    setContentView(R.layout.activity_post_ar)
+                    setContentView(R.layout.activity_pin_view)
                     startActivity(intent)
                     true
                 })

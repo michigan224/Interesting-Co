@@ -1,11 +1,13 @@
 package edu.umich.interestingco.rememri
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.*
 import android.os.Bundle
 import android.os.StrictMode
+import android.util.Base64
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -22,6 +24,7 @@ import okhttp3.Response
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
+import java.io.ByteArrayOutputStream
 import java.io.IOException
 import java.io.OutputStreamWriter
 import java.net.HttpURLConnection
@@ -43,11 +46,14 @@ class PinViewActivity : AppCompatActivity() {
     private lateinit var urlConnection: HttpURLConnection
     private lateinit var commentObj: JSONObject
 
+    @SuppressLint("WrongThread")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         var myIntent = intent.extras
         myPostId = myIntent?.getString("pin_id")
         getComments(this, myPostId)
+        binding = ActivityPinViewBinding.inflate(layoutInflater)
+        val mimageView = binding.imageCard
         val sharedPref : SharedPreferences?= getSharedPreferences("mypref", Context.MODE_PRIVATE)
         val username = sharedPref?.getString("username", "")
         val token = sharedPref?.getString("token", "")
@@ -78,9 +84,11 @@ class PinViewActivity : AppCompatActivity() {
             }
         })
         countDownLatch.await()
-        binding = ActivityPinViewBinding.inflate(layoutInflater)
-        val mimageView = binding.imageCard
-        Picasso.get().load(myImage).into(mimageView)
+        val imageAsBytes: ByteArray = Base64.decode(myImage, Base64.DEFAULT)
+        val bitmapImage = BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.size)
+        val stream = ByteArrayOutputStream()
+        bitmapImage.compress(Bitmap.CompressFormat.JPEG, 100, stream)
+        mimageView.setImageBitmap(bitmapImage)
         comments.addOnListChangedCallback(propertyObserver)
 
         friendListAdapter = CommentAdapter(binding.root.context, comments)
@@ -143,6 +151,7 @@ class PinViewActivity : AppCompatActivity() {
 
             }
         }
+        setContentView(binding.root)
     }
 
     private fun refreshFriends() {
