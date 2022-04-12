@@ -78,19 +78,17 @@ object CommentStore {
                     val data = response.body?.string()
                     val gson = Gson()
                     val myComments = object : TypeToken<List<Comment>>() {}.type
-                    val comments = gson.fromJson<List<Comment>>(data, myComments)
+                    val commentsRaw = gson.fromJson<List<Comment>>(data, myComments)
 //                    val comments = try { JSONObject(response.body?.string() ?: "").getJSONArray("comments") } catch (e: JSONException) { JSONArray() }
                     // val resp: String? = response.body?.string()?.replace("\n", "")
 
-//                    myComments.clear()
-                    for (element in comments) {
+                    comments.clear()
+                    for (element in commentsRaw) {
                         val commentEntry = element
-                            myCommentsReturn.add(Comment(comment_id = element.comment_id,
+                        comments.add(Comment(comment_id = element.comment_id,
                                 text = element.text,
                                 timestamp = element.timestamp,
-                                post_id = element.post_id,
                                 owner_id = element.owner_id,
-                                is_owned_by_user = element.is_owned_by_user,
                             ))
                     }
                 }
