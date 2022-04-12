@@ -41,8 +41,10 @@ import com.mapbox.maps.MapView
 import com.mapbox.maps.Style
 import com.mapbox.maps.extension.style.expressions.dsl.generated.interpolate
 import com.mapbox.maps.plugin.LocationPuck2D
+import com.mapbox.maps.plugin.annotation.AnnotationManager
 import com.mapbox.maps.plugin.annotation.annotations
 import com.mapbox.maps.plugin.annotation.generated.OnPointAnnotationClickListener
+import com.mapbox.maps.plugin.annotation.generated.PointAnnotationManager
 import com.mapbox.maps.plugin.annotation.generated.PointAnnotationOptions
 import com.mapbox.maps.plugin.annotation.generated.createPointAnnotationManager
 import com.mapbox.maps.plugin.gestures.OnMoveListener
@@ -56,6 +58,7 @@ import java.lang.ref.WeakReference
 
 
 var mapView: MapView? = null
+var annotationManagers: MutableList<PointAnnotationManager?>? = mutableListOf()
 
 class MainActivity : AppCompatActivity() {
     private lateinit var view: ActivityMainBinding
@@ -95,6 +98,9 @@ class MainActivity : AppCompatActivity() {
                     startActivity(loginIntent)
                 }
 
+                    for (manager in annotationManagers!!) {
+                        manager?.deleteAll()
+                    }
                 getFilteredPins()
             }
         }
@@ -298,6 +304,7 @@ class MainActivity : AppCompatActivity() {
                 val annotationApi = mapView?.annotations
                 val pointAnnotationManager = annotationApi?.createPointAnnotationManager(mapView!!)
                 // Set options for the resulting symbol layer.
+                annotationManagers?.add(pointAnnotationManager)
                 val pointAnnotationOptions: PointAnnotationOptions = PointAnnotationOptions()
                     // Define a geographic coordinate.
                     .withPoint(Point.fromLngLat(longitude, latitude))
@@ -322,6 +329,7 @@ class MainActivity : AppCompatActivity() {
                 val annotationApi = mapView?.annotations
                 val pointAnnotationManager = annotationApi?.createPointAnnotationManager(mapView!!)
                 // Set options for the resulting symbol layer.
+                annotationManagers?.add(pointAnnotationManager)
                 val pointAnnotationOptions: PointAnnotationOptions = PointAnnotationOptions()
                     // Define a geographic coordinate.
                     .withPoint(Point.fromLngLat(longitude, latitude))

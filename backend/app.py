@@ -342,7 +342,7 @@ def nearby_pins():
                 if dist < PIN_RADIUS:
                     pin['distance'] = dist
                     pin['is_friend'] = bool(
-                        'friends' in user and pin['owner_id'] in user['friends'])
+                        'friends' in user and pin['owner_id'] in user['friends']) or (username == pin['owner_id'])
                     nearby_pins.append(pin)
 
             return jsonify(nearby_pins), 200
