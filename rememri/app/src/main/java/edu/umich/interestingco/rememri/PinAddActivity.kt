@@ -42,7 +42,7 @@ class PinAddActivity : AppCompatActivity()  {
                 Log.d("DEBUG", "position changed to $position")
 
                 //Friend Position
-                isPublic = position == 1
+                isPublic = position == 0
             }
         }
 
