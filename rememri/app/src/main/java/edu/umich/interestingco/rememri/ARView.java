@@ -152,7 +152,7 @@ public class ARView extends AppCompatActivity{
                 double long_diff = Math.pow(prev_longitude - longitude, 2);
                 double total_diff = Math.sqrt(lat_diff + long_diff);
 //                Toast.makeText(getApplicationContext(), "Diff: " + String.valueOf(total_diff), Toast.LENGTH_SHORT).show();
-                if (total_diff > 3E-4) {
+                if (total_diff > 3.5E-4) {
                     updatedLocation = true;
                     prev_latitude = latitude;
                     prev_longitude = longitude;
@@ -257,7 +257,7 @@ public class ARView extends AppCompatActivity{
         if (username != "") {
             urlString = urlString + "&username=" + username;
         }
-        float distance = 0.05f;
+        float distance = 0.02f;
         urlString = urlString + "&radius=" + String.valueOf(distance);
 
         URL url = new URL(urlString);
