@@ -33,7 +33,7 @@ import java.util.concurrent.CountDownLatch
 
 
 class PinViewActivity : AppCompatActivity() {
-    private lateinit var friendListAdapter: CommentAdapter
+    private lateinit var commentListAdapter: CommentAdapter
     //private var _binding: ActivityPinViewBinding? = null
     // private val binding get() = _binding!!
     //private val binding = ActivityPinViewBinding.inflate(layoutInflater)
@@ -91,8 +91,8 @@ class PinViewActivity : AppCompatActivity() {
         mimageView.setImageBitmap(bitmapImage)
         comments.addOnListChangedCallback(propertyObserver)
 
-        friendListAdapter = CommentAdapter(binding.root.context, comments)
-        binding.commentList.adapter = friendListAdapter
+        commentListAdapter = CommentAdapter(binding.root.context, comments)
+        binding.commentList.adapter = commentListAdapter
 
         binding.refreshContainer.setOnRefreshListener {
             refreshFriends()
@@ -176,7 +176,7 @@ class PinViewActivity : AppCompatActivity() {
         ) {
             println("onItemRangeInserted: $positionStart, $itemCount")
             runOnUiThread {
-                friendListAdapter.notifyDataSetChanged()
+                commentListAdapter.notifyDataSetChanged()
             }
         }
 
