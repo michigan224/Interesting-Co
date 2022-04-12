@@ -53,12 +53,12 @@ object CommentStore {
     val myCommentsReturn = ObservableArrayList<Comment?>()
     private lateinit var urlConnection: HttpURLConnection
 
-    fun getComments(context: Context, pinId: Int?) {
+    fun getComments(context: Context, pinId: String?) {
         val oldSharedPref = context.getSharedPreferences("mypref", Context.MODE_PRIVATE)
         val username = oldSharedPref?.getString("username", "")
         val token = oldSharedPref?.getString("token", "")
 
-        val userUrl = URL(serverUrl + "pin/$pinId?username=$username&comments_only=true")
+        val userUrl = URL("$serverUrl/pin/$pinId?username=$username&comments_only=true")
         urlConnection = userUrl.openConnection() as HttpURLConnection
         urlConnection.requestMethod = "GET"
         urlConnection.setRequestProperty("Authorization", "Bearer $token")
@@ -78,19 +78,17 @@ object CommentStore {
                     val data = response.body?.string()
                     val gson = Gson()
                     val myComments = object : TypeToken<List<Comment>>() {}.type
-                    val comments = gson.fromJson<List<Comment>>(data, myComments)
+                    val commentsRaw = gson.fromJson<List<Comment>>(data, myComments)
 //                    val comments = try { JSONObject(response.body?.string() ?: "").getJSONArray("comments") } catch (e: JSONException) { JSONArray() }
                     // val resp: String? = response.body?.string()?.replace("\n", "")
 
-//                    myComments.clear()
-                    for (element in comments) {
+                    comments.clear()
+                    for (element in commentsRaw) {
                         val commentEntry = element
-                            myCommentsReturn.add(Comment(comment_id = element.comment_id,
+                        comments.add(Comment(comment_id = element.comment_id,
                                 text = element.text,
                                 timestamp = element.timestamp,
-                                post_id = element.post_id,
                                 owner_id = element.owner_id,
-                                is_owned_by_user = element.is_owned_by_user,
                             ))
                     }
                 }

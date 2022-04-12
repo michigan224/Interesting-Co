@@ -22,18 +22,17 @@
 
         <TextView
             android:id="@+id/titleNameText"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="10dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
             android:background="@drawable/comment_box"
-            android:gravity="center_horizontal"
-            android:text="Sample Text for a long comment"
-            android:singleLine="true"
+            android:fontFamily="@font/roboto_slab"
+            android:gravity="left"
+            android:padding="10dp"
+            android:singleLine="false"
             android:textColor="@color/rememri_black"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:fontFamily="@font/roboto_slab"/>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
     </RelativeLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

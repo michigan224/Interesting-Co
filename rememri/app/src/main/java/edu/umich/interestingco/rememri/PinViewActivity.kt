@@ -1,30 +1,24 @@
 package edu.umich.interestingco.rememri
 
-import androidx.appcompat.app.AppCompatActivity
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.*
-import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import android.os.StrictMode
+import android.util.Base64
 import android.util.Log
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
-import android.view.ViewGroup
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.TextView
+import android.view.inputmethod.InputMethodManager
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableList
-import androidx.fragment.app.ListFragment
-import coil.load
-import com.google.gson.Gson
 import com.squareup.picasso.Picasso
-import edu.umich.interestingco.rememri.databinding.ActivityPinViewBinding
 import edu.umich.interestingco.rememri.CommentStore.comments
 import edu.umich.interestingco.rememri.CommentStore.getComments
+import edu.umich.interestingco.rememri.databinding.ActivityPinViewBinding
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.OkHttpClient
@@ -32,29 +26,35 @@ import okhttp3.Response
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
+import java.io.ByteArrayOutputStream
 import java.io.IOException
 import java.io.OutputStreamWriter
 import java.net.HttpURLConnection
 import java.net.URL
+import java.util.concurrent.CountDownLatch
 
 
 class PinViewActivity : AppCompatActivity() {
-    private lateinit var friendListAdapter: CommentAdapter
-    private var _binding: ActivityPinViewBinding? = null
-    private val binding get() = _binding!!
+    private lateinit var commentListAdapter: CommentAdapter
+    //private var _binding: ActivityPinViewBinding? = null
+    // private val binding get() = _binding!!
+    //private val binding = ActivityPinViewBinding.inflate(layoutInflater)
+    private lateinit var binding: ActivityPinViewBinding
     private val client = OkHttpClient()
-    var myPostId : Int? = null
+    var myPostId : String? = null
     var myImage = ""
 
     private lateinit var url: URL
     private lateinit var urlConnection: HttpURLConnection
     private lateinit var commentObj: JSONObject
 
+    @SuppressLint("WrongThread")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         var myIntent = intent.extras
-        myPostId = myIntent?.getInt("pin_id")
+        myPostId = myIntent?.getString("pin_id")
         getComments(this, myPostId)
+        binding = ActivityPinViewBinding.inflate(layoutInflater)
         val mimageView = binding.imageCard
         val sharedPref : SharedPreferences?= getSharedPreferences("mypref", Context.MODE_PRIVATE)
         val username = sharedPref?.getString("username", "")
@@ -66,31 +66,35 @@ class PinViewActivity : AppCompatActivity() {
             .addHeader("Authorization", "Bearer $token")
             .build()
 
+        val countDownLatch = CountDownLatch(1)
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 Log.e("getFriends", "Failed GET request")
+                countDownLatch.countDown();
             }
 
             override fun onResponse(call: Call, response: Response) {
                 if (response.isSuccessful) {
                     val myJSON = try {
-                        JSONObject(response.body?.string() ?: "").getJSONArray("media_url")
+                        JSONObject(response.body?.string() ?: "").get("media_url")
                     } catch (e: JSONException) {
                         JSONArray()
                     }
                     myImage = myJSON.toString()
+                    countDownLatch.countDown();
                 }
             }
         })
-
-        Picasso.get().load(myImage).into(mimageView)
-
-        _binding = ActivityPinViewBinding.inflate(layoutInflater)
-
+        countDownLatch.await()
+        val imageAsBytes: ByteArray = Base64.decode(myImage, Base64.DEFAULT)
+        val bitmapImage = BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.size)
+        val stream = ByteArrayOutputStream()
+        bitmapImage.compress(Bitmap.CompressFormat.JPEG, 100, stream)
+        mimageView.setImageBitmap(bitmapImage)
         comments.addOnListChangedCallback(propertyObserver)
 
-        friendListAdapter = CommentAdapter(binding.root.context, comments)
-        binding.commentList.adapter = friendListAdapter
+        commentListAdapter = CommentAdapter(binding.root.context, comments)
+        binding.commentList.adapter = commentListAdapter
 
         binding.refreshContainer.setOnRefreshListener {
             refreshFriends()
@@ -109,20 +113,22 @@ class PinViewActivity : AppCompatActivity() {
         val commentText = binding.commentBox
         val commentSubmit = binding.commentSubmitButton
 
-        // TODO : need to test this once 2D pin viewing is possible
         commentSubmit.setOnClickListener {
             val submitText = commentText.text
 
             val oldSharedPref = getSharedPreferences("mypref", 0)
             val token = oldSharedPref.getString("token", "")
+            val username = oldSharedPref.getString("username", "")
 
             // TODO : not sure if we need to do any redirection for not logged in users...
-            if (token == ""){
+            if (token == "") {
                 Log.d("COMMENT PERMISSION", "User not logged in, cannot post comment")
             } else {
                 url = URL("https://rememri-instance-5obwaiol5q-ue.a.run.app/comment")
                 commentObj = JSONObject()
                 commentObj.put("comment_text", submitText)
+                commentObj.put("username", username)
+                commentObj.put("pin_id", myPostId)
 
                 val commentString = commentObj.toString()
 
@@ -130,6 +136,7 @@ class PinViewActivity : AppCompatActivity() {
                 urlConnection.requestMethod = "POST"
                 urlConnection.setRequestProperty("Content-Type", "application/json")
                 urlConnection.setRequestProperty("Accept", "application/json")
+                urlConnection.setRequestProperty("Authorization","Bearer $token")
                 urlConnection.doOutput = true
                 urlConnection.doInput = true
 
@@ -146,11 +153,13 @@ class PinViewActivity : AppCompatActivity() {
                 } else {
                     Log.e("HTTPURLCONNECTION_ERROR", response.toString())
                 }
-
+                binding.commentSubmitButton.visibility = View.GONE
+                binding.commentBox.visibility = View.GONE
+                binding.commentButton.visibility = View.VISIBLE
+                refreshFriends()
             }
-
         }
-
+        setContentView(binding.root)
     }
 
     private fun refreshFriends() {
@@ -175,7 +184,7 @@ class PinViewActivity : AppCompatActivity() {
         ) {
             println("onItemRangeInserted: $positionStart, $itemCount")
             runOnUiThread {
-                friendListAdapter.notifyDataSetChanged()
+                commentListAdapter.notifyDataSetChanged()
             }
         }
 
@@ -197,6 +206,14 @@ class PinViewActivity : AppCompatActivity() {
         super.onDestroy()
 
         comments.removeOnListChangedCallback(propertyObserver)
+    }
+
+    override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
+        if (currentFocus != null) {
+            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(currentFocus!!.windowToken, 0)
+        }
+        return super.dispatchTouchEvent(ev)
     }
 
     fun returnMain(view: View?) = startActivity(Intent(this, MainActivity::class.java))
