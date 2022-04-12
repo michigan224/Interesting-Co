@@ -160,7 +160,7 @@
         android:paddingTop="5dp"
         android:paddingRight="5dp"
         android:paddingBottom="50dp"
-        android:textColor="#000000"
+        android:textColor="@color/rememri_black"
         android:visibility="gone"
         android:windowSoftInputMode="stateVisible|adjustResize"
         app:layout_constraintBottom_toTopOf="@+id/commentList"
