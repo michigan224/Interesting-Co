@@ -129,21 +129,22 @@
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/refreshContainer"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/imageCard"
-        app:layout_constraintStart_toStartOf="@id/imageCard"
-        app:layout_constraintEnd_toEndOf="@id/imageCard"
-        app:layout_constraintBottom_toTopOf="@id/bottomToolbar">
-    <ListView
-        android:id="@+id/commentList"
-        android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintTop_toBottomOf="@id/imageCard"
-        app:layout_constraintStart_toStartOf="@id/imageCard"
-        app:layout_constraintEnd_toEndOf="@id/imageCard"
-        app:layout_constraintBottom_toTopOf="@id/bottomToolbar"
-        android:layout_marginTop="15dp"
-        android:layout_marginBottom="15dp"/>
+        app:layout_constraintBottom_toTopOf="@+id/bottomToolbar"
+        app:layout_constraintTop_toBottomOf="@+id/imageCard"
+        app:layout_constraintVertical_bias="0.0"
+        tools:layout_editor_absoluteX="206dp">
+
+        <ListView
+            android:id="@+id/commentList"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="15dp"
+            app:layout_constraintBottom_toTopOf="@id/bottomToolbar"
+            app:layout_constraintEnd_toEndOf="@id/imageCard"
+            app:layout_constraintStart_toStartOf="@id/imageCard"
+            app:layout_constraintTop_toBottomOf="@id/imageCard" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <EditText

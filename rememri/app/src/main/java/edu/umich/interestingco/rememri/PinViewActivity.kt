@@ -9,7 +9,9 @@ import android.os.Bundle
 import android.os.StrictMode
 import android.util.Base64
 import android.util.Log
+import android.view.MotionEvent
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableList
@@ -111,12 +113,12 @@ class PinViewActivity : AppCompatActivity() {
         val commentText = binding.commentBox
         val commentSubmit = binding.commentSubmitButton
 
-        // TODO : need to test this once 2D pin viewing is possible
         commentSubmit.setOnClickListener {
             val submitText = commentText.text
 
             val oldSharedPref = getSharedPreferences("mypref", 0)
             val token = oldSharedPref.getString("token", "")
+            val username = oldSharedPref.getString("username", "")
 
             // TODO : not sure if we need to do any redirection for not logged in users...
             if (token == "") {
@@ -125,6 +127,8 @@ class PinViewActivity : AppCompatActivity() {
                 url = URL("https://rememri-instance-5obwaiol5q-ue.a.run.app/comment")
                 commentObj = JSONObject()
                 commentObj.put("comment_text", submitText)
+                commentObj.put("username", username)
+                commentObj.put("pin_id", myPostId)
 
                 val commentString = commentObj.toString()
 
@@ -132,6 +136,7 @@ class PinViewActivity : AppCompatActivity() {
                 urlConnection.requestMethod = "POST"
                 urlConnection.setRequestProperty("Content-Type", "application/json")
                 urlConnection.setRequestProperty("Accept", "application/json")
+                urlConnection.setRequestProperty("Authorization","Bearer $token")
                 urlConnection.doOutput = true
                 urlConnection.doInput = true
 
@@ -148,7 +153,10 @@ class PinViewActivity : AppCompatActivity() {
                 } else {
                     Log.e("HTTPURLCONNECTION_ERROR", response.toString())
                 }
-
+                binding.commentSubmitButton.visibility = View.GONE
+                binding.commentBox.visibility = View.GONE
+                binding.commentButton.visibility = View.VISIBLE
+                refreshFriends()
             }
         }
         setContentView(binding.root)
@@ -198,6 +206,14 @@ class PinViewActivity : AppCompatActivity() {
         super.onDestroy()
 
         comments.removeOnListChangedCallback(propertyObserver)
+    }
+
+    override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
+        if (currentFocus != null) {
+            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(currentFocus!!.windowToken, 0)
+        }
+        return super.dispatchTouchEvent(ev)
     }
 
     fun returnMain(view: View?) = startActivity(Intent(this, MainActivity::class.java))

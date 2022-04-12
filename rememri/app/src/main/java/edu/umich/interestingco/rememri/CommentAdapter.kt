@@ -19,8 +19,8 @@ class CommentAdapter(context: Context, comments: ArrayList<Comment?>) :
         }) as ListitemCommentBinding
 
         getItem(position)?.run {
-            val myString = "$text( $owner_id )"
-            listItemView.titleNameText = myString
+            val myString = "$owner_id:\n$text"
+            listItemView.titleNameText.text = myString
 
             //listItemView.root.setBackgroundColor(Color.parseColor(if (position % 2 == 0) "#E0E0E0" else "#EEEEEE"))
         }
