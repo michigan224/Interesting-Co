@@ -1,6 +1,7 @@
 package edu.umich.interestingco.rememri
 
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Color
 import android.os.StrictMode
@@ -10,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.core.content.ContextCompat.startActivity
 import edu.umich.interestingco.rememri.databinding.ListitemRequestsBinding
 import org.json.JSONObject
 import java.io.OutputStreamWriter
@@ -63,6 +65,7 @@ class FriendRequestsAdapter(context: Context, users: ArrayList<Friend?>) :
                     if (response == HttpURLConnection.HTTP_OK) {
                         Toast.makeText(context, "Friend successfully added", Toast.LENGTH_LONG)
                             .show()
+                        context.startActivity(Intent(context, FriendActivity::class.java))
                     } else if (response == HttpURLConnection.HTTP_BAD_REQUEST) {
                         Toast.makeText(context, "You are already friends!", Toast.LENGTH_LONG)
                             .show()
@@ -107,6 +110,7 @@ class FriendRequestsAdapter(context: Context, users: ArrayList<Friend?>) :
                     if (response == HttpURLConnection.HTTP_OK) {
                         Toast.makeText(context, "Friend successfully rejeted", Toast.LENGTH_LONG)
                             .show()
+                        context.startActivity(Intent(context, FriendActivity::class.java))
                     } else if (response == HttpURLConnection.HTTP_BAD_REQUEST) {
                         Toast.makeText(context, "Friend request not found", Toast.LENGTH_LONG)
                             .show()
