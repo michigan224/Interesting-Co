@@ -333,7 +333,7 @@ def nearby_pins():
                 return jsonify({"message": "User not found"}), 401
 
             visible_pins = [
-                pin for pin in pins if (pin['is_public'] or ('friends' in user and pin['owner_id'] in user['friends']))]
+                pin for pin in pins if (pin['is_public'] or ('friends' in user and pin['owner_id'] in user['friends']) or (username == pin['owner_id']))]
 
             nearby_pins = []
             for pin in visible_pins:

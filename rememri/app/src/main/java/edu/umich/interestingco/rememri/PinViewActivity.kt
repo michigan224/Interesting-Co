@@ -12,6 +12,7 @@ import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableList
@@ -51,7 +52,7 @@ class PinViewActivity : AppCompatActivity() {
     @SuppressLint("WrongThread")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        var myIntent = intent.extras
+        val myIntent = intent.extras
         myPostId = myIntent?.getString("pin_id")
         getComments(this, myPostId)
         binding = ActivityPinViewBinding.inflate(layoutInflater)

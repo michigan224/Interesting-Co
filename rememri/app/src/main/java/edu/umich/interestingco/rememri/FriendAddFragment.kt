@@ -84,6 +84,7 @@ class FriendAddFragment : Fragment() {
                 if (response == HttpURLConnection.HTTP_OK) {
                     Toast.makeText(activity, "Friend request sent.", Toast.LENGTH_LONG)
                         .show()
+                    context?.startActivity(Intent(context, FriendActivity::class.java))
                 } else if (response == HttpURLConnection.HTTP_BAD_REQUEST) {
                     Toast.makeText(activity, "You've already sent them a request!", Toast.LENGTH_LONG)
                         .show()
